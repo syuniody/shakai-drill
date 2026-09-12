@@ -118,6 +118,7 @@ h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red)
 }
 .opt[aria-checked="true"] .box{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .opt .n{margin-left:auto;font-family:var(--ff-m);font-size:11px;color:var(--ink-3)}
+.opt.close{justify-content:center;color:var(--ink-3);font-weight:500;border-top:1px solid var(--rule);border-radius:0 0 7px 7px;margin-top:3px;padding-top:9px}
 .opt .sep{height:1px;background:var(--rule)}
 .sel{position:relative;display:inline-flex;align-items:center}
 .sel::after{content:"\25be";position:absolute;right:10px;font-size:10px;color:var(--ink-3);pointer-events:none}
@@ -234,7 +235,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v15 ・ 9/12更新</span>
+      <span id="ver">v16 ・ 9/13更新</span>
     </div>
   </header>
 
@@ -588,6 +589,11 @@ function drawSources(){
       });
     })
   );
+  const close=document.createElement("button");
+  close.className="opt close";close.type="button";
+  close.textContent="\u9589\u3058\u308b";
+  close.onclick=function(){srcOpen(false);};
+  srcPop.appendChild(close);
 }
 
 function srcOpen(on){
@@ -595,8 +601,9 @@ function srcOpen(on){
   srcBtn.setAttribute("aria-expanded",String(on));
 }
 srcBtn.onclick=function(e){e.stopPropagation();srcOpen(srcPop.hidden);};
-document.addEventListener("click",function(e){
-  if(!srcPop.hidden && !srcMenu.contains(e.target)) srcOpen(false);
+srcMenu.addEventListener("pointerdown",function(e){e.stopPropagation();});
+document.addEventListener("pointerdown",function(){
+  if(!srcPop.hidden) srcOpen(false);
 });
 document.addEventListener("keydown",function(e){
   if(e.key==="Escape" && !srcPop.hidden){srcOpen(false);srcBtn.focus();}
@@ -762,10 +769,18 @@ function draw(){
   tally();
 }
 
+function scopeItems(){
+  let out=[];
+  sections().filter(s=>current==="all"||s.id===current).forEach(function(s){out=out.concat(s.items);});
+  return out;
+}
 function tally(){
-  const ok=Object.keys(marks).filter(k=>marks[k]==="ok").length;
+  const its=scopeItems(), n=its.length;
+  let ok=0;
+  its.forEach(function(it){if(marks[it[2]]==="ok")ok++;});
   document.getElementById("okN").textContent=ok;
-  document.getElementById("gauge").style.width=(total?ok/total*100:0)+"%";
+  document.getElementById("allN").textContent=n;
+  document.getElementById("gauge").style.width=(n?ok/n*100:0)+"%";
 }
 
 function setAll(v){document.querySelectorAll(".ans").forEach(b=>b.dataset.state=v);}
