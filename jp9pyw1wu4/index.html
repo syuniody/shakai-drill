@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#FBF8F1">
+<title>小学生社会一問一答ドリル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600&display=swap">
+<style>
+:root{
+  --paper:#FBF8F1;
+  --paper-2:#F4EFE3;
+  --paper-3:#EBE4D3;
+  --ink:#22211C;
+  --ink-2:#5D5A4F;
+  --ink-3:#8C8877;
+  --rule:#DFD7C5;
+  --rule-2:#CFC5AE;
+  --red:#B93328;
+  --red-ink:#B93328;
+  --film:#D9564A;
+  --film-a:0.92;
+  --blue:#2B5691;
+  --green:#4F7A46;
+  --on-accent:#FBF8F1;
+  --ff-d:"Noto Serif JP",serif;
+  --ff-b:"Noto Sans JP",system-ui,sans-serif;
+  --ff-m:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#15171A; --paper-2:#1C1F24; --paper-3:#252931;
+    --ink:#EAE5D9; --ink-2:#A8A496; --ink-3:#7C7A70;
+    --rule:#2F343C; --rule-2:#3D434D;
+    --red:#F0776A; --red-ink:#F0776A;
+    --film:#8E3830; --film-a:0.95;
+    --blue:#7FA9E0; --green:#8FBF83;
+    --on-accent:#14161A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15171A; --paper-2:#1C1F24; --paper-3:#252931;
+  --ink:#EAE5D9; --ink-2:#A8A496; --ink-3:#7C7A70;
+  --rule:#2F343C; --rule-2:#3D434D;
+  --red:#F0776A; --red-ink:#F0776A;
+  --film:#8E3830; --film-a:0.95;
+  --blue:#7FA9E0; --green:#8FBF83;
+  --on-accent:#14161A;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--ff-b);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 96px}
+
+.masthead{padding:44px 0 22px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.22em;color:var(--ink-3);font-weight:700;margin:0 0 10px}
+h1{font-family:var(--ff-d);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.28;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red) 34%,transparent) 64%);padding:0 .06em}
+.lede{margin:14px 0 0;color:var(--ink-2);max-width:62ch;font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin:16px 0 0;font-size:12px;color:var(--ink-3);font-family:var(--ff-m)}
+
+.bar{background:var(--paper);border-bottom:1px solid var(--rule);margin:0 -20px;padding:10px 20px 14px}
+.bar-in{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:inherit;font-size:12.5px;font-weight:500;border:1px solid var(--rule-2);background:transparent;color:var(--ink-2);border-radius:999px;padding:5px 13px;cursor:pointer;white-space:nowrap}
+.tab:hover{border-color:var(--ink-3);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tab .n{font-family:var(--ff-m);font-size:11px;opacity:.6;margin-left:5px}
+.row2{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.btn{font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;background:var(--paper-2);color:var(--ink);border:1px solid var(--rule-2);border-radius:6px;padding:5px 12px}
+.btn:hover{background:var(--paper-3)}
+.btn.on{background:var(--red);border-color:var(--red);color:var(--on-accent)}
+.tab:focus-visible,.btn:focus-visible,.ans:focus-visible,.mk:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.spacer{flex:1 1 auto}
+.prog{display:flex;align-items:center;gap:10px;font-family:var(--ff-m);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.gauge{width:118px;height:7px;background:var(--paper-3);border-radius:999px;overflow:hidden}
+.gauge i{display:block;height:100%;width:0;background:var(--green);transition:width .3s ease}
+.hint{font-size:11.5px;color:var(--ink-3);margin:0}
+
+.sec{margin:38px 0 0}
+.sec-h{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:7px}
+.sec-h h2{font-family:var(--ff-d);font-weight:600;font-size:19px;margin:0;letter-spacing:.02em}
+.sec-h .src{font-family:var(--ff-m);font-size:11px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
+.q{display:grid;grid-template-columns:40px minmax(0,1fr) minmax(0,.82fr) 62px;gap:0 14px;align-items:start;padding:11px 0;border-bottom:1px solid var(--rule)}
+.q.hide{display:none}
+.num{font-family:var(--ff-m);font-size:12px;color:var(--ink-3);padding-top:3px;font-variant-numeric:tabular-nums}
+.ask{margin:0;font-size:14.5px;line-height:1.7}
+.ask .sub{display:block;font-size:11px;color:var(--ink-3);margin-top:1px;letter-spacing:.04em}
+.lab{font-size:11px;letter-spacing:.14em;color:var(--ink-3);font-weight:700}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.menu{position:relative;display:inline-flex}
+.menu-btn{display:inline-flex;align-items:center;gap:9px;max-width:100%}
+.menu-btn .caret{font-size:10px;color:var(--ink-3)}
+.menu-btn .cur{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-pop{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:40;
+  min-width:240px;max-width:min(340px,86vw);max-height:58vh;overflow:auto;
+  background:var(--paper);border:1px solid var(--rule-2);border-radius:10px;
+  box-shadow:0 8px 26px rgba(0,0,0,.22);padding:5px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.opt{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  font:inherit;font-size:12.5px;color:var(--ink);
+  background:transparent;border:0;border-radius:7px;padding:8px 10px;cursor:pointer;
+}
+.opt:hover{background:var(--paper-2)}
+.opt:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.opt .box{
+  width:16px;height:16px;flex:0 0 auto;border:1px solid var(--rule-2);border-radius:4px;
+  display:grid;place-items:center;font-size:10px;line-height:1;color:transparent;
+}
+.opt[aria-checked="true"] .box{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.opt .n{margin-left:auto;font-family:var(--ff-m);font-size:11px;color:var(--ink-3)}
+.opt .sep{height:1px;background:var(--rule)}
+.sel{position:relative;display:inline-flex;align-items:center}
+.sel::after{content:"\25be";position:absolute;right:10px;font-size:10px;color:var(--ink-3);pointer-events:none}
+.sel select{appearance:none;-webkit-appearance:none;color-scheme:light dark;font:inherit;font-size:12.5px;font-weight:500;background:var(--paper-2);color:var(--ink);border:1px solid var(--rule-2);border-radius:6px;padding:6px 28px 6px 12px;cursor:pointer;max-width:100%}
+.sel select:hover{background:var(--paper-3)}
+.sel select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.confirm{display:inline-flex;align-items:center;gap:8px}
+.confirm .ask-del{font-size:12.5px;color:var(--ink);font-weight:500}
+.btn.danger{background:var(--red);border-color:var(--red);color:var(--on-accent)}
+.btn.danger:hover{background:var(--red);opacity:.88}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn.primary:hover{opacity:.86;background:var(--ink)}
+.ansbox{display:flex;justify-content:flex-start}
+.ans{font:inherit;font-family:var(--ff-b);font-size:14.5px;font-weight:700;text-align:left;line-height:1.7;color:var(--red-ink);background:transparent;border:0;border-radius:3px;padding:1px 0;margin:0;cursor:pointer;transition:background .18s ease}
+.ans .m{display:none;color:var(--ink-2);font-weight:500;letter-spacing:.04em}
+.ans[data-state="0"]{padding:1px 7px;background:color-mix(in srgb,var(--film) calc(var(--film-a) * 100%),transparent)}
+.ans[data-state="0"]:hover{background:color-mix(in srgb,var(--film) 72%,transparent)}
+.ans[data-state="0"] .t{visibility:hidden}
+.ans[data-state="1"] .t{display:none}
+.ans[data-state="1"] .m{display:inline}
+.ans[data-state="1"]:hover,.ans[data-state="2"]:hover{background:color-mix(in srgb,var(--film) 16%,transparent)}
+.marks{display:flex;gap:4px;justify-content:flex-end;padding-top:2px}
+.mk{font:inherit;font-size:13px;line-height:1;width:26px;height:26px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--rule-2);border-radius:999px;background:transparent;color:var(--ink-3)}
+.mk:hover{border-color:var(--ink-3);color:var(--ink)}
+.mk.ok[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--on-accent)}
+.mk.ng[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--on-accent)}
+.xfer{
+  margin-top:2px;padding:12px 14px;border:1px solid var(--rule-2);border-radius:10px;
+  background:var(--paper-2);display:flex;flex-direction:column;gap:8px;max-width:640px;
+}
+.xfer h3{margin:0;font-size:12px;letter-spacing:.1em;color:var(--ink-3);font-weight:700}
+.xfer p{margin:0;font-size:11.5px;color:var(--ink-3)}
+.xfer textarea{
+  font-family:var(--ff-m);font-size:11px;line-height:1.5;color:var(--ink);
+  background:var(--paper);border:1px solid var(--rule-2);border-radius:6px;
+  padding:8px;width:100%;resize:vertical;min-height:54px;
+}
+.xfer .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.xfer .msg{font-size:11.5px;color:var(--green);font-weight:500}
+.mapbox{margin:16px 0 4px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.jpmap{width:100%;max-width:420px;height:auto;display:block}
+.jpmap .land{fill:var(--paper-3);stroke:var(--rule-2);stroke-width:1.4;stroke-linejoin:round}
+.jpmap .pin{fill:var(--red);stroke:var(--paper);stroke-width:2}
+.jpmap .pin-t{fill:var(--paper);font-family:var(--ff-b);font-size:13px;font-weight:700}
+.jpmap .lead{stroke:var(--red);stroke-width:1.4;fill:none}
+.mapcap{font-size:11px;color:var(--ink-3)}
+.empty{padding:40px 0;color:var(--ink-3);font-size:14px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-3);font-size:12px}
+
+#hud{position:fixed;right:14px;bottom:16px;z-index:30;display:flex;align-items:center;gap:8px}
+.pill{
+  display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
+  background:var(--paper-2);border:1px solid var(--rule-2);border-radius:999px;
+  padding:8px 15px;font-family:var(--ff-m);font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+.pill b{color:var(--ink);font-weight:700}
+.pill .g{display:block;width:52px;height:6px;background:var(--paper-3);border-radius:999px;overflow:hidden}
+.pill .g i{display:block;height:100%;width:0;background:var(--green);transition:width .3s ease}
+#totop{
+  display:none;
+  width:44px;height:44px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--rule-2);background:var(--paper-2);color:var(--ink);
+  font:inherit;font-size:15px;line-height:1;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+#totop.show{display:grid;place-items:center}
+@media (max-width:720px){
+  .masthead{padding:26px 0 14px}
+  .lede{font-size:13px;margin-top:10px}
+  .meta{margin-top:11px;font-size:11px;gap:4px 12px}
+  .bar{padding:8px 20px 9px}
+  .bar-in{gap:7px}
+  .prog{font-size:11px;gap:7px}
+  #hud{right:10px;bottom:12px;gap:6px}
+  .pill{padding:7px 12px;font-size:11px;gap:7px}
+  .pill .g{width:40px}
+  #totop{width:40px;height:40px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-bottom:1px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs>*{flex:0 0 auto}
+  .row2 .spacer{display:none}
+  .row2{gap:8px 10px}
+  .sel{flex:1 1 40%}
+  .sel select{width:100%}
+  #draw{flex:1 1 100%;padding:10px 12px;font-size:13.5px}
+  .chips{gap:6px}
+  .hint{font-size:11px;line-height:1.6}
+  .q{grid-template-columns:30px minmax(0,1fr);gap:0}
+  .num{grid-row:1}
+  .ask{grid-column:2}
+  .ansbox{grid-column:2;margin-top:7px}
+  .marks{grid-column:2;justify-content:flex-start;margin-top:9px}
+  .sec-h .src{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  .bar,.marks,.no-print,#hud{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .q{break-inside:avoid}
+  .ans{background:transparent!important;color:#D2483A!important;padding:0!important}
+  .ans .t{visibility:visible!important;display:inline!important}
+  .ans .m{display:none!important}
+  .sec{margin-top:20px}
+}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">テキスト準拠　赤シート式</p>
+    <h1>小学生社会　<span class="mark">一問一答</span>ドリル</h1>
+    <p class="lede">テキスト本文で赤線・青線が引かれた語句を答えにしたドリルです。答えは赤シートで隠してあります。1回目でヒント、もう一度押すと答えが出ます。</p>
+    <div class="meta">
+      <span>全<span id="total">0</span>問</span>
+      <span>出典 <span id="nsrc">0</span></span>
+      <span>分野 <span id="nsec">0</span></span>
+      <span id="ver">v15 ・ 9/12更新</span>
+    </div>
+  </header>
+
+  <nav class="bar">
+    <div class="bar-in">
+      <div class="row2">
+        <span class="lab">出典</span>
+        <span class="menu" id="srcMenu">
+          <button class="btn menu-btn" id="srcBtn" type="button" aria-expanded="false" aria-haspopup="true">
+            <span class="cur" id="srcLabel">すべて</span><span class="caret">▾</span>
+          </button>
+          <div class="menu-pop" id="srcPop" role="menu" hidden></div>
+        </span>
+        <span class="lab">分野</span>
+        <span class="sel"><select id="unit" aria-label="分野を選ぶ"></select></span>
+        <span class="lab">表示</span>
+        <span class="sel"><select id="filter" aria-label="表示する問題を選ぶ">
+          <option value="all">すべて表示</option>
+          <option value="ok">○だけ表示</option>
+          <option value="ng">△だけ表示</option>
+          <option value="none">空欄だけ表示</option>
+        </select></span>
+      </div>
+      <div class="row2">
+        <span class="lab">出題数</span>
+        <span class="chips" id="counts"></span>
+        <button class="btn primary" id="draw" type="button">ランダムに出題</button>
+      </div>
+      <div class="row2">
+        <button class="btn" id="revealAll" type="button">答えを全部出す</button>
+        <button class="btn" id="hideAll" type="button">全部かくす</button>
+        <button class="btn" id="xferBtn" type="button" aria-expanded="false">記録の引き継ぎ</button>
+        <button class="btn" id="reset" type="button">記録を消す</button>
+        <span class="confirm" id="resetConfirm" hidden>
+          <span class="ask-del">消していいですか。</span>
+          <button class="btn danger" id="resetYes" type="button">はい</button>
+          <button class="btn" id="resetNo" type="button">やめる</button>
+        </span>
+      </div>
+      <div class="xfer" id="xferPanel" hidden>
+        <h3>書き出し</h3>
+        <p>下の文字列をコピーして、メモなどに保存してください。</p>
+        <textarea id="xferOut" readonly rows="3"></textarea>
+        <div class="row">
+          <button class="btn" id="xferCopy" type="button">コピーする</button>
+          <span class="msg" id="xferMsg1"></span>
+        </div>
+        <h3>読み込み</h3>
+        <p>保存した文字列を貼り付けて読み込むと、この端末の記録に合流します。</p>
+        <textarea id="xferIn" rows="3" placeholder="ここに貼り付け"></textarea>
+        <div class="row">
+          <button class="btn" id="xferLoad" type="button">読み込む</button>
+          <span class="msg" id="xferMsg2"></span>
+        </div>
+      </div>
+      <p class="hint">赤い部分は、1回押すと最初の1文字と文字数、もう一度押すと答えが出ます。もう一度で隠れます。○＝覚えた　△＝あやしい。記録はこの端末のブラウザにだけ残ります。</p>
+    </div>
+  </nav>
+
+  <main id="list"></main>
+
+  <div id="hud">
+    <span class="pill" aria-live="polite">
+      <span>覚えた <b id="okN">0</b>／<span id="allN">0</span></span>
+      <span class="g"><i id="gauge"></i></span>
+    </span>
+    <button id="totop" type="button" aria-label="一番上へ戻る" title="上へ">▲</button>
+  </div>
+
+  <footer>
+    <p class="no-print">答えの表記はテキスト本文どおり。別解が考えられる設問もあります。</p>
+  </footer>
+</div>
+
+<script>
+const SOURCES=[
+{id:"u31",short:"\u5358\u514331",title:"\u5358\u514331\u3000\u65e5\u672c\u306e\u74b0\u5883\u554f\u984c\u2460\uff08\u5730\u7403\u74b0\u5883\uff09"},
+{id:"u32",short:"\u5358\u514332",title:"\u5358\u514332\u3000\u65e5\u672c\u306e\u74b0\u5883\u554f\u984c\u2461\uff08\u74b0\u5883\u4fdd\u8b77\u6d3b\u52d5\uff09"}
+];
+
+const DATA=[
+{id:"s1",from:"u31",title:"地球規模の環境破壊",page:"p.48–49",items:[
+["大量生産・大量消費と並んで、産業の発達がもたらす環境への負担を表す言葉は。","大量廃棄"],
+["一国で起きた環境問題が他国や地球規模に広がることを、国境との関係でどう表現するか。","環境問題に国境なし"],
+["酸性雨の原因物質を2つ。","いおう酸化物・ちっ素酸化物"],
+["酸性雨の原因物質は、おもに何に含まれて排出されるか。","自動車の排気ガスや工場の煙"],
+["酸性雨の被害が大きい地域を3つ。","西ヨーロッパ・北アメリカ・中国"],
+["ドイツで酸性雨による立ち枯れが問題となった森林の名は。","シュバルツバルト"],
+["酸性雨による被害を3つ。","森林の枯死・湖の魚の死滅・石造建築物が溶ける"],
+["熱帯林の破壊の最大の原因は、人口増加による何か。","食料不足（焼畑農業の拡大）"],
+["エビの養殖池をつくるために伐採される、熱帯の海岸に育つ樹林は。","マングローブ"],
+["熱帯林の破壊が深刻な、南アメリカの川の流域は。","アマゾン川流域"],
+["熱帯林の破壊が深刻な、アジアの地域は。","東南アジア"],
+["熱帯林が失われることで起こる被害を3つ。","野生動植物の絶滅・砂ばく化の加速・地球温暖化の一因"],
+["砂ばく化の原因を3つ。","焼畑農業・家畜の過放牧・燃料としてのたきぎ取り"],
+["砂ばく化が最も深刻な、サハラ砂ばくの南のふちに広がる地域を何というか。","サヘル（地帯）"],
+["水不足から地下水をくみ上げすぎると、井戸に何が浸入して何が起こるか。","海水が浸入し、塩害が起こる"],
+["オゾン層を破壊する原因物質は。","フロンガス"],
+["フロンガスは、おもにどのような用途に使われてきたか。","エアコン・冷蔵庫などの冷媒、IC洗浄、スプレーなど"],
+["南極上空に広がる、オゾン層が特に薄くなった部分を何というか。","オゾンホール"],
+["オゾン層が破壊されると何が増加し、どんな健康被害が起こるか。","紫外線が増加し、皮ふガンが多発する"],
+["細かく砕けて海を漂い、生物の体内に取りこまれるプラスチックを何というか。","マイクロプラスチック"],
+["日本で2020年7月から始まった、プラスチックごみを減らす取り組みは。","レジ袋の有料化"]
+]},
+{id:"s2",from:"u31",title:"地球温暖化",page:"p.50",items:[
+["過去1000年でもっとも温暖だったといわれる10年間は、何年代か。","1990年代"],
+["地球の平均気温は、100年あたり何℃の割合で上昇しているか。","0.74℃"],
+["日本の平均気温は、100年あたり何℃の割合で上昇しているか。","1.35℃"],
+["東京や大阪などの大都市で、周辺より気温が高くなる現象を何というか。","ヒートアイランド現象"],
+["地球温暖化の原因となる気体の総称は。","温室効果ガス"],
+["温室効果ガスを3つ。","二酸化炭素・メタンガス・フロンガス"],
+["二酸化炭素が増える原因となる、石油・石炭などの燃料をまとめて何というか。","化石燃料"],
+["20世紀中に、海水面はすでに何cm上昇したか。","10〜20cm"],
+["海水温の上昇によって死滅が心配されている海の生物は。","サンゴ"],
+["水没の危機に直面している、太平洋のサンゴ礁の島国を2つ。","ツバル・キリバス"],
+["環境の悪化によって住む土地を追われる人々を何というか。","環境難民"],
+["1990年に世界最大の二酸化炭素排出国だったのはどこか。","アメリカ合衆国（22.1％）"],
+["2020年に世界最大の二酸化炭素排出国となったのはどこか。","中国（30.5％）"],
+["温暖化により北上を始め、伝染病の拡大が心配されている生物は。","熱帯の昆虫"]
+]},
+{id:"s3",from:"u31",title:"循環型社会とSDGs",page:"p.51",items:[
+["3R運動の3つを答えよ。","リデュース・リユース・リサイクル"],
+["ごみを出さず資源を循環させる社会を何というか。","循環型社会"],
+["ある産業の廃棄物を別の産業で利用し、自然界への排出をゼロにする考え方を何というか。","ゼロエミッション"],
+["SDGsを日本語で何というか。","持続可能な開発目標"],
+["SDGsは何年の国連サミットで採択されたか。","2015年"],
+["SDGsは何年までの達成をめざしているか。","2030年"],
+["SDGsはいくつの目標といくつのターゲットからなるか。","17の目標（分野）と169のターゲット"],
+["日本が2016年に発表した、SDGs達成のための方針を何というか。","SDGs実施指針"],
+["地元でつくられた食べ物を地元で食べることを何というか。","地産地消"],
+["食料の輸送量と輸送距離をかけて、環境への負荷を表す指標を何というか。","フードマイレージ"],
+["温室効果ガスの排出量と吸収量を差し引きゼロにすることを何というか。","カーボンニュートラル"],
+["二酸化炭素の排出を実質ゼロにした社会を何というか。","脱炭素社会"],
+["日本は何年までに温室効果ガスの排出を実質ゼロにすると表明したか。","2050年"]
+]},
+{id:"s4",from:"u32",title:"国連による環境保護",page:"p.54–55",items:[
+["1972年、初めて地球規模の環境破壊が議題となった会議は。","国連人間環境会議"],
+["国連人間環境会議の開催地は。","スウェーデンのストックホルム"],
+["国連人間環境会議のスローガンは。","かけがえのない地球"],
+["国連人間環境会議をきっかけに設立された機関は（略称も）。","国連環境計画（UNEP）"],
+["1992年に開かれ、地球サミットとも呼ばれる会議は。","国連環境開発会議"],
+["地球サミットの開催地は。","ブラジルのリオデジャネイロ"],
+["地球サミットのスローガンは。","持続可能な開発"],
+["地球サミットで中心議題となった環境問題を2つ。","地球温暖化・酸性雨"],
+["地球サミットで結ばれた、温室効果ガスの排出を規制する条約は。","気候変動枠組条約"],
+["1997年に京都で開かれた会議の正式名称と略称は。","地球温暖化防止京都会議（COP3）"],
+["COP3で採択され、2005年に発効した文書は。","京都議定書"],
+["京都議定書で具体的な数値目標が定められたのはどの国々か。","先進国"],
+["京都議定書で削減の義務がなかったのはどの国々か。","発展途上国"],
+["当時世界一の排出国でありながら、議会の反対で京都議定書を批准しなかった国は。","アメリカ合衆国"],
+["2002年に開かれた環境開発サミットの開催地は。","南アフリカ共和国のヨハネスブルグ"],
+["2015年のCOP21で採択され、2016年11月に発効した協定は。","パリ協定"],
+["パリ協定が定めた気温の目標を答えよ。","産業革命前から2度未満に抑え、1.5度以内に抑える努力をする"],
+["パリ協定が掲げる、今世紀後半の排出目標は。","温室効果ガスの排出を実質ゼロにする"],
+["パリ協定に参加するのはどの範囲の国か。","気候変動枠組条約に加盟するすべての国"],
+["パリ協定での日本の削減目標は。","2030年に2013年度比46％削減"],
+["パリ協定でのEUの削減目標は。","2030年に1990年比55％以上削減"],
+["パリ協定でのアメリカの削減目標は。","2030年に2005年比50〜52％削減"],
+["2017年にパリ協定からの離脱を表明したアメリカ大統領は。","トランプ大統領"],
+["2021年にパリ協定への復帰を宣言したアメリカ大統領は。","バイデン大統領"]
+]},
+{id:"s5",from:"u32",title:"環境保護の条約と日本の対策",page:"p.54・56",items:[
+["イギリスで始まった、市民が募金で土地を買い取り環境を守る運動は。","ナショナルトラスト運動"],
+["日本のナショナルトラスト運動の例を2つ。","北海道の知床半島・和歌山県の天神崎"],
+["世界遺産条約を採択した国際機関は（日本語と略称）。","国連教育科学文化機関（ユネスコ・UNESCO）"],
+["世界遺産条約が保護の対象とする遺産を3つ。","自然遺産・文化遺産・複合遺産"],
+["水鳥の生息地として国際的に重要な湿地とその動植物を守る条約は。","ラムサール条約"],
+["ラムサール条約は何年に、どこで採択されたか。","1971年・イランのラムサール"],
+["ラムサール条約に登録された日本最大の湿原は。","釧路湿原（北海道）"],
+["ラムサール条約に登録された、滋賀県の湖は。","琵琶湖"],
+["1973年に採択された、絶滅のおそれのある野生動植物の国際取引を規制する条約は。","ワシントン条約"],
+["日本で1971年に環境問題に取り組む機関として設置されたのは。","環境庁"],
+["環境庁は2001年に何に昇格したか。","環境省"],
+["1967年に制定され、環境基本法の制定と同時に廃止された法律は。","公害対策基本法"],
+["1993年に制定された、地球規模の環境問題に対応するための法律は。","環境基本法"],
+["開発が自然環境に及ぼす影響を調査・報告することを事業者に義務づける法律は。","環境アセスメント法（環境影響評価法）"],
+["環境アセスメント法が制定されたのは何年か。","1997年"],
+["容器包装リサイクル法が制定されたのは何年か。","1997年"],
+["家電リサイクル法が制定されたのは何年か。","2001年"],
+["国立公園を管理するのはどこか。","国（環境省）"],
+["国定公園を管理するのはどこか。","都道府県"]
+]},
+{id:"s6",from:"u32",title:"日本の世界遺産",page:"p.56–57",items:[
+["日本の世界自然遺産は何か所あるか。","5か所"],
+["ぶなの原生林で知られる、青森県・秋田県にまたがる自然遺産は。","白神山地"],
+["屋久すぎ（縄文すぎ）で知られる鹿児島県の自然遺産は。","屋久島"],
+["周辺海域を含む自然が評価された、北海道の自然遺産は。","知床"],
+["独自の進化をとげた動植物が見られ、「東洋のガラパゴス」と呼ばれる東京都の自然遺産は。","小笠原諸島"],
+["2021年に登録された、鹿児島県・沖縄県にまたがる自然遺産は。","奄美大島、徳之島、沖縄島北部及び西表島"],
+["現存する世界最古の木造建築をふくむ、奈良県の文化遺産は。","法隆寺地域の仏教建造物"],
+["白鷺城とも呼ばれる、兵庫県の城は。","姫路城"],
+["京都府・滋賀県にまたがる文化遺産は。","古都京都の文化財"],
+["沖縄県にある、グスク（城）を中心とする文化遺産は。","琉球王国のグスク及び関連遺産群"],
+["島根県にある、銀の産出で栄えた鉱山の文化遺産は。","石見銀山遺跡とその文化的景観"],
+["奈良県・和歌山県・三重県にまたがる、霊場と道の文化遺産は。","紀伊山地の霊場と参詣道"],
+["岐阜県・富山県にある、合掌造り集落の文化遺産は。","白川郷・五箇山の合掌造り集落"],
+["広島県にある、「負の遺産」とされる文化遺産は。","原爆ドーム"],
+["海上に社殿が建つ、広島県の文化遺産は。","厳島神社"],
+["奈良県にある、平城京跡などをふくむ文化遺産は。","古都奈良の文化財"],
+["栃木県にある、東照宮などをふくむ文化遺産は。","日光の社寺"],
+["中尊寺金色堂で知られる、岩手県の文化遺産は。","平泉"],
+["静岡県・山梨県にまたがり、信仰の対象と芸術の源泉として登録された文化遺産は。","富士山"],
+["群馬県にある、生糸の生産で近代化を支えた文化遺産は。","富岡製糸場と絹産業遺産群"],
+["岩手・静岡・山口・福岡・佐賀・長崎・熊本・鹿児島の8県にまたがる文化遺産は。","明治日本の産業革命遺産"],
+["国立西洋美術館をふくむ、東京都の文化遺産は。","ル・コルビュジエの建築作品（近代建築運動への顕著な貢献）"],
+["福岡県にある、「神宿る島」と呼ばれる島をふくむ文化遺産は。","「神宿る島」宗像・沖ノ島と関連遺産群"],
+["長崎県・熊本県にまたがる、禁教下の信仰を伝える文化遺産は。","長崎と天草地方の潜伏キリシタン関連遺産"],
+["仁徳天皇陵古墳をふくむ、大阪府の文化遺産は。","百舌鳥・古市古墳群"],
+["三内丸山遺跡をふくむ、北海道・青森・岩手・秋田の文化遺産は。","北海道・北東北の縄文遺跡群"],
+["2024年に登録された、新潟県の文化遺産は。","佐渡島の金山"],
+["人類が犯したあやまちを二度とくり返さないために登録された遺産を何というか。","負の遺産"],
+["ポーランドにある、ナチスの強制収容所の「負の遺産」は。","アウシュビッツ強制収容所"],
+["セネガルにある、奴隷貿易の拠点となった島は。","ゴレ島"],
+["南アフリカ共和国にある、奴隷貿易に反対した人々が収容された島は。","ロベン島"]
+]},
+{id:"s7",from:"u32",title:"世界遺産・自然の位置",page:"p.56–57",items:[
+["白神山地は、青森県と何県にまたがるか。","秋田県"],
+["屋久島がある都道府県は。","鹿児島県"],
+["知床がある都道府県は。","北海道"],
+["小笠原諸島がある都道府県は。","東京都"],
+["奄美大島・徳之島がある都道府県は。","鹿児島県"],
+["西表島がある都道府県は。","沖縄県"],
+["日本の世界自然遺産のうち、最も北にあるものは。","知床（北海道）"],
+["日本の世界自然遺産のうち、最も南にあるものは。","西表島（沖縄県）"],
+["白神山地は何地方にあるか。","東北地方"],
+["屋久島は何地方にあるか。","九州地方"],
+["首里城（琉球王国のグスク）がある都道府県は。","沖縄県"],
+["厳島神社がある都道府県は。","広島県"],
+["姫路城がある都道府県は。","兵庫県"],
+["原爆ドームがある都道府県は。","広島県"],
+["法隆寺がある都道府県は。","奈良県"],
+["石見銀山がある都道府県は。","島根県"],
+["富山県と岐阜県にまたがる世界文化遺産は。","白川郷・五箇山の合掌造り集落"],
+["富岡製糸場がある都道府県は。","群馬県"],
+["日光の社寺がある都道府県は。","栃木県"],
+["平泉がある都道府県は。","岩手県"],
+["富士山は、静岡県と何県にまたがるか。","山梨県"],
+["百舌鳥・古市古墳群がある都道府県は。","大阪府"],
+["佐渡島の金山がある都道府県は。","新潟県"],
+["紀伊山地の霊場と参詣道がまたがる3つの県は。","奈良県・和歌山県・三重県"],
+["潜伏キリシタン関連遺産がまたがる2つの県は。","長崎県・熊本県"],
+["「神宿る島」沖ノ島がある都道府県は。","福岡県"],
+["北海道・北東北の縄文遺跡群がまたがる、北海道以外の3県は。","青森県・岩手県・秋田県"],
+["釧路湿原がある都道府県は。","北海道"],
+["琵琶湖がある都道府県は。","滋賀県"],
+["ナショナルトラスト運動で知られる天神崎がある都道府県は。","和歌山県"],
+["ラムサール条約に登録されている、長崎県の干潟は。","諒早湾"],
+["酸性雨の被害で知られる「黒い森」はどの国にあるか。","ドイツ"],
+["砂ばく化が深刻なサハラ砂ばく周辺は、どの大陸にあるか。","アフリカ大陸"],
+["熱帯林の破壊が深刻なアマゾン川流域は、どの国を中心とするか。","ブラジル"]
+]},
+{id:"s8",from:"u32",title:"地図で覚える自然遺産",page:"p.56–57",figure:"map",items:[
+["地図中のAの世界自然遺産の名前は。","知床"],
+["地図中のBの世界自然遺産の名前は。","白神山地"],
+["地図中のCの世界自然遺産の名前は。","小笠原諸島"],
+["地図中のDの世界自然遺産の名前は。","屋久島"],
+["地図中のEの世界自然遺産の名前は。","奄美大島"],
+["地図中のFの世界自然遺産の名前は。","西表島"],
+["地図中のAの遺産がある都道府県は。","北海道"],
+["地図中のBの遺産がまたがる2つの県は。","青森県・秋田県"],
+["地図中のCの遺産がある都道府県は。","東京都"],
+["地図中のD・Eの遺産がある都道府県は。","鹿児島県"],
+["地図中のFの遺産がある都道府県は。","沖縄県"],
+["地図中のCの遺産は、東京から船で約何時間かかるか。","約25時間"],
+["A〜Fのうち、最も北にある遺産の記号は。","A（知床）"],
+["A〜Fのうち、最も南にある遺産の記号は。","F（西表島）"]
+]}
+];
+
+DATA.forEach(s=>s.items.forEach((it,i)=>it.push(s.id+"-"+i)));
+
+const KEY="env-drill-v1";
+let marks={};
+try{marks=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){marks={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(marks))}catch(e){}};
+
+const COUNTS=[10,20,30,50,0];
+let sources=[], current="all", filter="all", count=0, quiz=null;
+
+const list=document.getElementById("list"), counts=document.getElementById("counts");
+const unitSel=document.getElementById("unit"), filterSel=document.getElementById("filter");
+const srcBtn=document.getElementById("srcBtn"), srcPop=document.getElementById("srcPop"),
+      srcLabel=document.getElementById("srcLabel"), srcMenu=document.getElementById("srcMenu");
+const SRC={};SOURCES.forEach(x=>SRC[x.id]=x);
+const total=DATA.reduce((n,s)=>n+s.items.length,0);
+document.getElementById("total").textContent=total;
+document.getElementById("allN").textContent=total;
+document.getElementById("nsrc").textContent=SOURCES.length;
+document.getElementById("nsec").textContent=DATA.length;
+
+const KEEP="\u30fb\uff08\uff09()\u300c\u300d\u3001,\uff0f/\u301c~ \u3000:\uff1a\u2015\u2026\u300e\u300f";
+function maskOf(a){
+  return Array.from(a).map(function(c,i){
+    if(i===0) return c;
+    return KEEP.indexOf(c)>=0 ? c : "\u25cb";
+  }).join("");
+}
+
+function mkBtn(cls,label,on,fn){
+  const b=document.createElement("button");
+  b.className=cls;b.type="button";
+  b.setAttribute("aria-selected",String(on));
+  if(typeof label==="string"){b.textContent=label}else{b.append(...label)}
+  b.onclick=fn;
+  return b;
+}
+
+function fill(sel,opts,val){
+  sel.replaceChildren(...opts.map(function(o){
+    const el=document.createElement("option");
+    el.value=o[0];el.textContent=o[1];
+    return el;
+  }));
+  sel.value=val;
+}
+
+function sections(){return DATA.filter(x=>!sources.length||sources.indexOf(x.from)>=0);}
+
+function refresh(){if(quiz)pick();else draw();}
+
+function optRow(label,n,on,fn){
+  const b=document.createElement("button");
+  b.className="opt";b.type="button";b.setAttribute("role","menuitemcheckbox");
+  b.setAttribute("aria-checked",String(on));
+  const box=document.createElement("span");box.className="box";box.textContent="\u2713";
+  const tx=document.createElement("span");tx.textContent=label;
+  const num=document.createElement("span");num.className="n";num.textContent=n+"\u554f";
+  b.append(box,tx,num);
+  b.onclick=fn;
+  return b;
+}
+
+function srcText(){
+  if(!sources.length) return "\u3059\u3079\u3066";
+  if(sources.length<=2) return sources.map(id=>(SRC[id]||{}).short).join("\u30fb");
+  return sources.length+"\u4ef6\u3092\u9078\u629e";
+}
+
+function drawSources(){
+  srcLabel.textContent=srcText();
+  srcPop.replaceChildren(
+    optRow("\u3059\u3079\u3066",total,!sources.length,function(){
+      sources=[];current="all";refresh();
+    }),
+    ...SOURCES.map(function(x){
+      const n=DATA.filter(d=>d.from===x.id).reduce((a,d)=>a+d.items.length,0);
+      return optRow(x.title,n,sources.indexOf(x.id)>=0,function(){
+        const i=sources.indexOf(x.id);
+        if(i>=0) sources.splice(i,1); else sources.push(x.id);
+        current="all";refresh();
+      });
+    })
+  );
+}
+
+function srcOpen(on){
+  srcPop.hidden=!on;
+  srcBtn.setAttribute("aria-expanded",String(on));
+}
+srcBtn.onclick=function(e){e.stopPropagation();srcOpen(srcPop.hidden);};
+document.addEventListener("click",function(e){
+  if(!srcPop.hidden && !srcMenu.contains(e.target)) srcOpen(false);
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape" && !srcPop.hidden){srcOpen(false);srcBtn.focus();}
+});
+
+function drawUnits(){
+  const secs=sections();
+  if(current!=="all" && !secs.some(x=>x.id===current)) current="all";
+  const n=secs.reduce((a,d)=>a+d.items.length,0);
+  fill(unitSel,[["all","\u3059\u3079\u3066\uff08"+n+"\u554f\uff09"]].concat(
+    secs.map(x=>[x.id,x.title+"\uff08"+x.items.length+"\u554f\uff09"])),current);
+}
+
+function drawCounts(){
+  counts.replaceChildren(...COUNTS.map(function(n){
+    const b=document.createElement("button");
+    b.className="tab";b.type="button";
+    b.setAttribute("aria-selected",String(n===count));
+    b.textContent=n===0?"\u5168\u554f":n+"\u554f";
+    b.onclick=function(){count=n;if(n===0){quiz=null;draw();}else{pick();}};
+    return b;
+  }));
+}
+
+function keep(k){
+  const m=marks[k];
+  if(filter==="all") return true;
+  if(filter==="none") return !m;
+  return m===filter;
+}
+function rows(s){
+  return s.items.map(it=>({q:it[0],a:it[1],key:it[2],sec:s.title,short:(SRC[s.from]||{}).short||"",fig:s.figure}));
+}
+function pool(){
+  let out=[];
+  sections().filter(s=>current==="all"||s.id===current).forEach(function(s){out=out.concat(rows(s));});
+  return out.filter(x=>keep(x.key));
+}
+const EMPTY={ok:"\u25cb\u3092\u3064\u3051\u305f\u554f\u984c\u306f\u3042\u308a\u307e\u305b\u3093\u3002",ng:"\u25b3\u3092\u3064\u3051\u305f\u554f\u984c\u306f\u3042\u308a\u307e\u305b\u3093\u3002",none:"\u672a\u30c1\u30a7\u30c3\u30af\u306e\u554f\u984c\u306f\u3042\u308a\u307e\u305b\u3093\u3002",all:"\u8a72\u5f53\u3059\u308b\u554f\u984c\u304c\u3042\u308a\u307e\u305b\u3093\u3002"};
+
+function pick(){
+  const p=pool();
+  for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=p[i];p[i]=p[j];p[j]=t;}
+  quiz=count===0?p:p.slice(0,count);
+  draw();
+}
+
+function qNode(it,no,showSec){
+  const el=document.createElement("div");
+  el.className="q";
+
+  const num=document.createElement("div");num.className="num";num.textContent=String(no).padStart(3,"0");
+
+  const ask=document.createElement("p");ask.className="ask";
+  ask.appendChild(document.createTextNode(it.q));
+  if(showSec){
+    const sub=document.createElement("span");sub.className="sub";
+    sub.textContent=it.short?it.short+"\u3000"+it.sec:it.sec;
+    ask.appendChild(sub);
+  }
+
+  const box=document.createElement("div");box.className="ansbox";
+  const btn=document.createElement("button");
+  btn.className="ans";btn.type="button";btn.dataset.state="0";
+  btn.setAttribute("aria-label","\u30d2\u30f3\u30c8\u3068\u7b54\u3048\u3092\u9806\u306b\u8868\u793a");
+  const t=document.createElement("span");t.className="t";t.textContent=it.a;
+  const m=document.createElement("span");m.className="m";m.textContent=maskOf(it.a);
+  btn.append(t,m);
+  btn.onclick=function(){btn.dataset.state=String((Number(btn.dataset.state)+1)%3);};
+  box.appendChild(btn);
+
+  const mk=document.createElement("div");mk.className="marks";
+  const ok=document.createElement("button");ok.className="mk ok";ok.type="button";ok.textContent="\u25cb";ok.title="\u899a\u3048\u305f";ok.setAttribute("aria-label","\u899a\u3048\u305f");
+  const ng=document.createElement("button");ng.className="mk ng";ng.type="button";ng.textContent="\u25b3";ng.title="\u3042\u3084\u3057\u3044";ng.setAttribute("aria-label","\u3042\u3084\u3057\u3044");
+  function sync(){
+    ok.setAttribute("aria-pressed",String(marks[it.key]==="ok"));
+    ng.setAttribute("aria-pressed",String(marks[it.key]==="ng"));
+  }
+  ok.onclick=function(){if(marks[it.key]==="ok"){delete marks[it.key]}else{marks[it.key]="ok"}save();sync();tally();};
+  ng.onclick=function(){if(marks[it.key]==="ng"){delete marks[it.key]}else{marks[it.key]="ng"}save();sync();tally();};
+  sync();
+  mk.append(ok,ng);
+
+  el.append(num,ask,box,mk);
+  return el;
+}
+
+const MAP_SVG='<svg class="jpmap" viewBox="8 0 384 368" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="\u65e5\u672c\u306e\u7565\u5730\u56f3\u3068\u4e16\u754c\u81ea\u7136\u907a\u7523A\u301cF\u306e\u4f4d\u7f6e">'
++'<g class="land">'
++'<polygon points="319,8 342,26 373,26 378,43 340,65 314,54 303,59 300,68 290,73 286,57 294,43 314,33 316,18"/>'
++'<polygon points="302,72 311,73 312,88 320,102 312,123 302,144 302,164 286,178 282,174 271,181 261,178 260,182 246,181 240,183 238,188 227,191 220,201 211,188 213,181 208,181 191,184 167,187 157,191 143,193 147,186 150,185 161,178 171,169 178,167 196,167 205,166 214,167 220,168 225,165 227,158 234,150 245,136 240,143 273,129 285,113 283,97 290,100 288,93 287,85 293,76 300,83"/>'
++'<polygon points="194,193 202,197 196,210 186,206 177,218 170,215 161,209 173,201 177,197"/>'
++'<polygon points="138,197 150,202 152,208 149,219 145,229 144,238 139,236 133,244 127,240 127,232 125,222 120,216 114,206 121,205 128,202"/>'
++'<ellipse cx="262" cy="127" rx="8" ry="5"/><circle cx="206" cy="186" r="3.5"/>'
++'<ellipse cx="142" cy="246" rx="2.4" ry="5"/><circle cx="136" cy="250" r="4.5"/>'
++'<ellipse cx="118" cy="282" rx="6" ry="4"/><circle cx="111" cy="291" r="3"/>'
++'<ellipse cx="95" cy="314" rx="8" ry="4.5"/>'
++'<circle cx="53" cy="340" r="3"/><circle cx="35" cy="346" r="3.2"/><circle cx="29" cy="347" r="4"/>'
++'<circle cx="322" cy="295" r="2.4"/><circle cx="323" cy="303" r="2.8"/><circle cx="322" cy="310" r="2.4"/>'
++'</g><g class="pins">'
++'<circle class="pin" cx="373" cy="26" r="12"/><text class="pin-t" x="373" y="31" text-anchor="middle">A</text>'
++'<circle class="pin" cx="291" cy="88" r="12"/><text class="pin-t" x="291" y="93" text-anchor="middle">B</text>'
++'<path class="lead" d="M348,300 L329,303"/>'
++'<circle class="pin" cx="350" cy="300" r="12"/><text class="pin-t" x="350" y="305" text-anchor="middle">C</text>'
++'<circle class="pin" cx="136" cy="250" r="12"/><text class="pin-t" x="136" y="255" text-anchor="middle">D</text>'
++'<circle class="pin" cx="118" cy="282" r="12"/><text class="pin-t" x="118" y="287" text-anchor="middle">E</text>'
++'<circle class="pin" cx="29" cy="347" r="12"/><text class="pin-t" x="29" y="352" text-anchor="middle">F</text>'
++'</g></svg>';
+
+function mapNode(){
+  const box=document.createElement("div");box.className="mapbox";
+  box.innerHTML=MAP_SVG;
+  const cap=document.createElement("p");cap.className="mapcap";
+  cap.textContent="\u7565\u5730\u56f3\u3002\u5b9f\u969b\u306e\u5f62\u3084\u7e2e\u5c3a\u3068\u306f\u7570\u306a\u308a\u307e\u3059\u3002";
+  box.appendChild(cap);
+  return box;
+}
+
+function head(title,src){
+  const h=document.createElement("div");h.className="sec-h";
+  const h2=document.createElement("h2");h2.textContent=title;
+  const sp=document.createElement("span");sp.className="src";sp.textContent=src;
+  h.append(h2,sp);
+  return h;
+}
+
+function draw(){
+  drawSources();drawUnits();drawCounts();
+  list.replaceChildren();
+
+  if(quiz){
+    const sec=document.createElement("section");sec.className="sec";
+    const unit=current!=="all"?(DATA.find(x=>x.id===current)||{}).title
+      :(!sources.length?"\u5168\u51fa\u5178"
+      :sources.map(id=>(SRC[id]||{}).short).join("\u30fb"));
+    sec.appendChild(head("\u30e9\u30f3\u30c0\u30e0\u51fa\u984c",quiz.length+"\u554f\u3000/\u3000"+unit));
+    if(quiz.some(x=>x.fig==="map")) sec.appendChild(mapNode());
+    if(!quiz.length){
+      const p=document.createElement("p");p.className="empty";
+      p.textContent=EMPTY[filter];
+      sec.appendChild(p);
+    }
+    quiz.forEach(function(it,i){sec.appendChild(qNode(it,i+1,true));});
+    list.appendChild(sec);
+    tally();return;
+  }
+
+  let no=0,shown=0;
+  sections().filter(s=>current==="all"||s.id===current).forEach(function(s){
+    const items=rows(s).filter(x=>keep(x.key));
+    if(!items.length) return;
+    const sec=document.createElement("section");sec.className="sec";
+    sec.appendChild(head(s.title,((SRC[s.from]||{}).short||"")+"\u3000"+s.page));
+    if(s.figure==="map") sec.appendChild(mapNode());
+    items.forEach(function(it){no++;shown++;sec.appendChild(qNode(it,no,false));});
+    list.appendChild(sec);
+  });
+  if(!shown){
+    const p=document.createElement("p");p.className="empty";
+    p.textContent=EMPTY[filter];
+    list.replaceChildren(p);
+  }
+  tally();
+}
+
+function tally(){
+  const ok=Object.keys(marks).filter(k=>marks[k]==="ok").length;
+  document.getElementById("okN").textContent=ok;
+  document.getElementById("gauge").style.width=(total?ok/total*100:0)+"%";
+}
+
+function setAll(v){document.querySelectorAll(".ans").forEach(b=>b.dataset.state=v);}
+document.getElementById("revealAll").onclick=function(){setAll("2");};
+document.getElementById("hideAll").onclick=function(){setAll("0");};
+document.getElementById("draw").onclick=function(){pick();window.scrollTo({top:0,behavior:"smooth"});};
+
+unitSel.onchange=function(){current=unitSel.value;if(quiz)pick();else draw();};
+filterSel.onchange=function(){filter=filterSel.value;if(quiz)pick();else draw();};
+const resetBtn=document.getElementById("reset"), resetBox=document.getElementById("resetConfirm");
+let resetTimer=null;
+function askReset(on){
+  resetBtn.hidden=on;
+  resetBox.hidden=!on;
+  clearTimeout(resetTimer);
+  if(on) resetTimer=setTimeout(function(){askReset(false);},8000);
+}
+resetBtn.onclick=function(){askReset(true);};
+document.getElementById("resetNo").onclick=function(){askReset(false);};
+document.getElementById("resetYes").onclick=function(){marks={};save();askReset(false);draw();};
+
+const xferBtn=document.getElementById("xferBtn"), xferPanel=document.getElementById("xferPanel"),
+      xferOut=document.getElementById("xferOut"), xferIn=document.getElementById("xferIn");
+function xferText(){return JSON.stringify({v:1,app:"shakai-drill",marks:marks});}
+function flash(id,t){
+  const el=document.getElementById(id);el.textContent=t;
+  setTimeout(function(){el.textContent="";},3000);
+}
+xferBtn.onclick=function(){
+  const on=xferPanel.hidden;
+  xferPanel.hidden=!on;
+  xferBtn.setAttribute("aria-expanded",String(on));
+  if(on) xferOut.value=xferText();
+};
+document.getElementById("xferCopy").onclick=function(){
+  xferOut.value=xferText();
+  xferOut.select();
+  let ok=false;
+  try{ok=document.execCommand("copy");}catch(e){}
+  if(ok){flash("xferMsg1","\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f");return;}
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(xferOut.value).then(
+      function(){flash("xferMsg1","\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f");},
+      function(){flash("xferMsg1","\u9078\u629e\u6e08\u307f\u3067\u3059\u3002\u624b\u52d5\u3067\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044");});
+  }else{
+    flash("xferMsg1","\u9078\u629e\u6e08\u307f\u3067\u3059\u3002\u624b\u52d5\u3067\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044");
+  }
+};
+document.getElementById("xferLoad").onclick=function(){
+  let d=null;
+  try{d=JSON.parse(xferIn.value.trim());}catch(e){}
+  if(!d||typeof d.marks!=="object"||d.marks===null){
+    flash("xferMsg2","\u8aad\u307f\u8fbc\u3081\u307e\u305b\u3093\u3002\u6587\u5b57\u5217\u3092\u78ba\u304b\u3081\u3066\u304f\u3060\u3055\u3044");return;
+  }
+  let n=0;
+  Object.keys(d.marks).forEach(function(k){
+    const v=d.marks[k];
+    if(v==="ok"||v==="ng"){marks[k]=v;n++;}
+  });
+  save();draw();xferOut.value=xferText();xferIn.value="";
+  flash("xferMsg2",n+"\u4ef6\u3092\u8aad\u307f\u8fbc\u307f\u307e\u3057\u305f");
+};
+
+const toTop=document.getElementById("totop");
+toTop.onclick=function(){window.scrollTo({top:0,behavior:"smooth"});};
+function onScroll(){toTop.classList.toggle("show",window.scrollY>500);}
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+draw();
+</script>
+
+</body>
+</html>
