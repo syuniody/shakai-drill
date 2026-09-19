@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="theme-color" content="#FBF8F1">
+<meta name="theme-color" content="#FFFFFF">
 <title>小学生社会一問一答ドリル</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600&display=swap">
 <style>
 :root{
-  --paper:#FBF8F1; --paper-2:#F4EFE3; --paper-3:#EBE4D3;
+  --paper:#FFFFFF; --paper-2:#F6F5F1; --paper-3:#ECEAE3;
   --ink:#22211C; --ink-2:#5D5A4F; --ink-3:#7E7B6E;
-  --rule:#DFD7C5; --rule-2:#CFC5AE;
+  --rule:#E4E1D8; --rule-2:#CFCBBF;
   --red:#B93328; --red-ink:#B93328; --film:#D9564A; --film-a:0.94;
   --blue:#2B5691; --green:#3F7A3A; --green-soft:#E3EFDD;
   --amber:#B8711A; --amber-soft:#F6E7CF;
-  --on-accent:#FBF8F1;
+  --on-accent:#FFFFFF;
   --ff-d:"Noto Serif JP",serif;
   --ff-b:"Noto Sans JP",system-ui,sans-serif;
   --ff-m:ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -141,14 +141,14 @@ h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red)
 .empty{padding:40px 0;color:var(--ink-3);font-size:15px}
 .mapbox{margin:16px 0 4px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .jpmap{width:100%;max-width:440px;height:auto;display:block}
-.jpmap .land{fill:var(--paper-3);stroke:var(--rule-2);stroke-width:1.4;stroke-linejoin:round}
+.jpmap .land{fill:color-mix(in srgb,var(--paper-3) 86%,var(--ink));stroke:var(--rule-2);stroke-width:1.4;stroke-linejoin:round}
 .jpmap .pin{fill:var(--red);stroke:var(--paper);stroke-width:2}
 .jpmap .pin-t{fill:var(--paper);font-family:var(--ff-b);font-size:13px;font-weight:700}
 .jpmap .lead{stroke:var(--red);stroke-width:1.4;fill:none}
 .mapcap{font-size:12px;color:var(--ink-3)}
 .cmap{width:100%;max-width:460px;height:auto;display:block}
 .cmap .nei path{fill:color-mix(in srgb,var(--paper-3) 40%,var(--paper));stroke:var(--rule);stroke-width:.8}
-.cmap .land path{fill:var(--paper-3);stroke:var(--ink-3);stroke-width:1.1;stroke-linejoin:round}
+.cmap .land path{fill:color-mix(in srgb,var(--paper-3) 86%,var(--ink));stroke:var(--ink-3);stroke-width:1.1;stroke-linejoin:round}
 .cmap .pin{fill:var(--red);stroke:var(--paper);stroke-width:1.6}
 .cmap .pin-t{fill:var(--paper);font-family:var(--ff-b);font-size:12.5px;font-weight:700}
 .cmap .lead{stroke:var(--red);stroke-width:1.2;fill:none}
@@ -301,6 +301,10 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
   .sec{margin-top:20px}
 }
 </style>
+<script>
+(function(){var t="light";try{t=localStorage.getItem("env-drill-theme")||"light";}catch(e){}
+document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})();
+</script>
 
 <div class="wrap">
   <header class="masthead" id="masthead">
@@ -311,7 +315,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v22 ・ 9/19更新</span>
+      <span id="ver">v23 ・ 9/19更新</span>
     </div>
   </header>
 
@@ -350,6 +354,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
         <button class="btn small" id="revealAll" type="button">答えを全部出す</button>
         <button class="btn small" id="hideAll" type="button">全部かくす</button>
         <button class="btn small" id="rubyBtn" type="button" aria-pressed="true">ふりがな</button>
+        <button class="btn small" id="themeBtn" type="button">背景：白</button>
         <button class="btn small" id="xferBtn" type="button" aria-expanded="false">記録の引き継ぎ</button>
         <button class="btn small" id="reset" type="button">記録を消す</button>
         <span class="confirm" id="resetConfirm" hidden>
@@ -2327,6 +2332,16 @@ let rubyOn=true;try{rubyOn=localStorage.getItem(RKEY)!=="0";}catch(e){}
 function applyRuby(){document.body.classList.toggle("noruby",!rubyOn);$("rubyBtn").setAttribute("aria-pressed",String(rubyOn));$("rubyBtn").classList.toggle("on",rubyOn);}
 $("rubyBtn").onclick=function(){rubyOn=!rubyOn;try{localStorage.setItem(RKEY,rubyOn?"1":"0");}catch(e){}applyRuby();};
 applyRuby();
+
+const TKEY="env-drill-theme";
+function curTheme(){return document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light";}
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme",t);
+  $("themeBtn").textContent=t==="dark"?"背景：黒":"背景：白";
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="dark"?"#15171A":"#FFFFFF");
+}
+$("themeBtn").onclick=function(){const t=curTheme()==="dark"?"light":"dark";try{localStorage.setItem(TKEY,t);}catch(e){}applyTheme(t);};
+applyTheme(curTheme());
 
 const resetBtn=$("reset"),resetBox=$("resetConfirm");let resetTimer=null;
 function askReset(on){resetBtn.hidden=on;resetBox.hidden=!on;clearTimeout(resetTimer);if(on)resetTimer=setTimeout(function(){askReset(false);},8000);}
