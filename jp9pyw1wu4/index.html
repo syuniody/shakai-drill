@@ -119,6 +119,8 @@ h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red)
 .xfer summary{cursor:pointer;font-size:13px;color:var(--ink-3)}
 .xfer details[open]>*:not(summary){margin-top:8px}
 .nudge{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 14px;border:1px solid color-mix(in srgb,var(--amber) 50%,transparent);background:var(--amber-soft);border-radius:12px}
+.nudge.line{border-color:color-mix(in srgb,var(--red) 55%,transparent);background:color-mix(in srgb,var(--film) 10%,var(--paper))}
+.nudge a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .nudge .rt{font-size:14px;font-weight:500;color:var(--ink);flex:1 1 220px}
 .xfer .msg{font-size:13px;color:var(--green);font-weight:500}
 
@@ -322,9 +324,18 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v25 ・ 9/20更新</span>
+      <span id="ver">v26 ・ 9/20更新</span>
     </div>
   </header>
+
+  <div class="nudge line" id="lineBar" hidden style="margin-top:14px">
+    <span class="rt">いまLINEの中のブラウザで開いています。LINEのブラウザは、戻るボタンで閉じたときなどに記録が消えることがあります。下のボタンで、いつものブラウザ（Chromeなど）で開き直してください。記録もいっしょに引き継ぎます。</span>
+    <a class="btn primary" id="lineOpen" href="#" rel="noopener">いつものブラウザで開く</a>
+  </div>
+  <div class="resume" id="carryBar" hidden style="margin-top:14px">
+    <span class="rt" id="carryText"></span>
+    <button class="btn small" id="carryClose" type="button">閉じる</button>
+  </div>
 
   <nav class="bar" id="bar">
     <div class="bar-in">
@@ -2165,6 +2176,7 @@ const save=()=>{
   idbPut("marks",txt);
   const m=getMeta();setMeta({changes:(m.changes||0)+1});
   if(Object.keys(marks).length)askPersist();
+  if(typeof updateLineLink==="function")updateLineLink();
 };
 
 /* ---------- 状態 ---------- */
@@ -2650,6 +2662,36 @@ window.addEventListener("scroll",onScroll,{passive:true});onScroll();
   filterSel.value=filter;
   try{if(history.state&&history.state.v==="card")history.replaceState(null,"");}catch(e){}
 })();
+function packMarks(){return Object.keys(marks).filter(k=>marks[k]==="ok"||marks[k]==="ng").map(k=>k+(marks[k]==="ok"?"!":"_")).join(",");}
+function openURL(){return location.origin+location.pathname+"?openExternalBrowser=1"+(Object.keys(marks).length?"#m="+packMarks():"");}
+const IN_LINE=/\bLine\//i.test(navigator.userAgent||"");
+function updateLineLink(){if(IN_LINE)$("lineOpen").href=openURL();}
+if(IN_LINE){
+  $("lineBar").hidden=false;
+  updateLineLink();
+  $("lineOpen").addEventListener("click",updateLineLink);
+}
+(function(){
+  const h=location.hash||"";
+  const cleanSearch=location.search.replace(/[?&]openExternalBrowser=1/,"").replace(/^&/,"?");
+  if(h.indexOf("#m=")!==0){
+    if(cleanSearch!==location.search){try{history.replaceState(history.state,"",location.pathname+cleanSearch+h);}catch(e){}}
+    return;
+  }
+  let n=0;
+  decodeURIComponent(h.slice(3)).split(",").forEach(function(t){
+    const m=/^([A-Za-z0-9-]+)([!_])$/.exec(t);if(!m)return;
+    marks[m[1]]=(m[2]==="!")?"ok":"ng";n++;
+  });
+  try{history.replaceState(history.state,"",location.pathname+cleanSearch);}catch(e){}
+  if(n){
+    save();
+    $("carryText").textContent="LINEのブラウザから記録を引き継ぎました（"+n+"件）。これからはこのブラウザで使ってください。ホーム画面に追加しておくと便利です。";
+    $("carryBar").hidden=false;
+  }
+})();
+$("carryClose").onclick=function(){$("carryBar").hidden=true;};
+
 draw();
 if(!Object.keys(marks).length){
   idbGet("marks").then(function(v){
