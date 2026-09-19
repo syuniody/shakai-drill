@@ -14,9 +14,11 @@ const shots=JSON.parse(fs.readFileSync("shots.json","utf8"));
   await send("Page.enable");
   for(const s of shots){
     await send("Emulation.setDeviceMetricsOverride",{width:s.w,height:s.h,deviceScaleFactor:s.dsf||1,mobile:!!s.mobile});
-    await send("Page.navigate",{url:"file://"+path.resolve(s.file)});await sleep(1500);
+    if(!s.stay){await send("Page.navigate",{url:"file://"+path.resolve(s.file)});await sleep(1500);}
     if(s.js){await send("Runtime.evaluate",{expression:s.js});await sleep(s.wait||700);}
     if(s.js2){await send("Runtime.evaluate",{expression:s.js2});await sleep(700);}
+    for(const st of (s.steps||[])){await send("Runtime.evaluate",{expression:st});await sleep(800);}
+    if(s.noNav){}
     const r=await send("Page.captureScreenshot",{format:"png"});
     fs.writeFileSync(s.out,Buffer.from(r.data,"base64"));console.log("saved",s.out);
   }

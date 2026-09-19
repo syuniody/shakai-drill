@@ -83,6 +83,9 @@ h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red)
 .tab:focus-visible,.btn:focus-visible,.ans:focus-visible,.mk:focus-visible,.opt:focus-visible,.sel select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .spacer{flex:1 1 auto}
 .hint{font-size:13px;color:var(--ink-3);margin:0;line-height:1.7}
+.resume{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 14px;border:1px solid color-mix(in srgb,var(--green) 45%,transparent);background:var(--green-soft);border-radius:12px}
+.resume .rt{font-size:14.5px;font-weight:500;color:var(--ink);flex:1 1 220px}
+.resume .rt b{font-family:var(--ff-m);font-variant-numeric:tabular-nums}
 
 /* 複数選択メニュー */
 .menu{position:relative;display:inline-flex}
@@ -302,12 +305,17 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v20 ・ 9/19更新</span>
+      <span id="ver">v21 ・ 9/19更新</span>
     </div>
   </header>
 
   <nav class="bar" id="bar">
     <div class="bar-in">
+      <div class="resume" id="resume" hidden>
+        <span class="rt" id="resumeText"></span>
+        <button class="btn primary" id="resumeGo" type="button">つづきから</button>
+        <button class="btn small" id="resumeDrop" type="button">やめて消す</button>
+      </div>
       <div class="row2">
         <span class="lab">はんい</span>
         <span class="menu" id="srcMenu">
@@ -932,6 +940,20 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(marks))}catch(e){}};
 const COUNTS=[10,20,30,50,0];
 let sources=[], current="all", filter="all", count=20;
 let mode="list", sess=null;
+const PKEY="env-drill-prefs", SKEY="env-drill-session";
+function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify({sources:sources,current:current,filter:filter,count:count}));}catch(e){}}
+function saveSess(){
+  if(!sess)return;
+  try{localStorage.setItem(SKEY,JSON.stringify({v:1,keys:sess.items.map(x=>x.key),i:sess.i,res:sess.res,range:sess.range||"",t:Date.now()}));}catch(e){}
+}
+function clearSess(){sess=null;try{localStorage.removeItem(SKEY);}catch(e){}}
+function readSess(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SKEY)||"null");
+    if(!d||!Array.isArray(d.keys)||!d.keys.length)return null;
+    return d;
+  }catch(e){return null;}
+}
 const SRC={};SOURCES.forEach(x=>SRC[x.id]=x);
 const total=DATA.reduce((n,s)=>n+s.items.length,0);
 const $=id=>document.getElementById(id);
@@ -958,7 +980,7 @@ function maskOf(a){return Array.from(a).map((c,i)=>i===0?c:(KEEP.indexOf(c)>=0?c
 const EMPTY={ok:"◯をつけた問題はありません。",ng:"△をつけた問題はありません。",none:"まだの問題はありません。全部やりました。",all:"該当する問題がありません。"};
 
 /* ---------- 操作パネル ---------- */
-function refresh(){if(mode==="card"){/* カード中は設定変更で一覧に戻す */mode="list";}draw();}
+function refresh(){savePrefs();if(mode==="card"){mode="list";}draw();}
 function optRow(label,n,on,fn){
   const b=document.createElement("button");b.className="opt";b.type="button";b.setAttribute("role","menuitemcheckbox");b.setAttribute("aria-checked",String(on));
   const box=document.createElement("span");box.className="box";box.textContent="✓";
@@ -1001,7 +1023,7 @@ function drawCounts(){
     const b=document.createElement("button");b.className="tab";b.type="button";
     b.setAttribute("aria-selected",String(n===count));
     b.textContent=n===0?"全問":n+"問";
-    b.onclick=function(){count=n;drawCounts();};
+    b.onclick=function(){count=n;savePrefs();drawCounts();};
     return b;
   }));
 }
@@ -1090,7 +1112,7 @@ function draw(){
   barEl.hidden=(mode==="card");
   listEl.hidden=(mode==="card");
   playEl.hidden=(mode!=="card");
-  if(mode==="card"){renderPlay();tally();updateFab();return;}
+  if(mode==="card"){renderPlay();tally();updateFab();updateResume();return;}
   listEl.replaceChildren();
   let no=0,shown=0;
   sections().filter(s=>current==="all"||s.id===current).forEach(function(s){
@@ -1110,14 +1132,39 @@ function draw(){
     listEl.appendChild(sec);
   });
   if(!shown){const p=document.createElement("p");p.className="empty";p.textContent=EMPTY[filter];listEl.replaceChildren(p);}
-  tally();updateFab();
+  tally();updateFab();updateResume();
 }
 
 /* ---------- カード形式 ---------- */
+function enterCard(){
+  mode="card";
+  try{if(!(history.state&&history.state.v==="card"))history.pushState({v:"card"},"");}catch(e){}
+  draw();
+}
+function goList(){
+  let viaHistory=false;
+  try{if(history.state&&history.state.v==="card"){viaHistory=true;history.back();}}catch(e){}
+  if(!viaHistory){mode="list";draw();}
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+window.addEventListener("popstate",function(e){
+  if(e.state&&e.state.v==="card"){
+    if(sess){mode="card";draw();}
+    else{const d=readSess();if(d&&restoreSess(d)){mode="card";draw();}else{mode="list";draw();}}
+  }else{mode="list";draw();}
+});
+function restoreSess(d){
+  const by={};DATA.forEach(function(s){rows(s).forEach(function(r){by[r.key]=r;});});
+  const items=d.keys.map(k=>by[k]).filter(Boolean);
+  if(!items.length)return false;
+  sess={items:items,i:Math.min(d.i||0,items.length),res:d.res||{},range:d.range||""};
+  return true;
+}
 function startSession(items){
   if(!items.length){mode="list";draw();return;}
-  sess={items:items,i:0,res:{}};
-  mode="card";draw();
+  sess={items:items,i:0,res:{},range:rangeText()};
+  saveSess();
+  enterCard();
   window.scrollTo({top:$("masthead").offsetHeight-8,behavior:"smooth"});
 }
 function judge(v){
@@ -1125,15 +1172,15 @@ function judge(v){
   const it=sess.items[sess.i];
   if(v==="skip"){sess.res[it.key]="skip";}
   else{marks[it.key]=v;save();sess.res[it.key]=v;}
-  sess.i++;renderPlay();tally();
+  sess.i++;saveSess();renderPlay();tally();
 }
 function renderPlay(){
   playEl.replaceChildren();
   if(!sess)return;
   const n=sess.items.length;
   const top=document.createElement("div");top.className="play-top";
-  const back=document.createElement("button");back.className="link";back.type="button";back.textContent="← 設定にもどる";back.onclick=function(){mode="list";draw();window.scrollTo({top:0,behavior:"smooth"});};
-  const range=document.createElement("span");range.className="range";range.textContent=rangeText();
+  const back=document.createElement("button");back.className="link";back.type="button";back.textContent="← 設定にもどる";back.onclick=function(){goList();};
+  const range=document.createElement("span");range.className="range";range.textContent=sess.range||rangeText();
   const ctr=document.createElement("span");ctr.className="ctr";ctr.textContent=Math.min(sess.i+1,n)+" / "+n;
   top.append(back,range,ctr);
   const pl=document.createElement("div");pl.className="prog-line";const pi=document.createElement("i");pi.style.width=(sess.i/n*100)+"%";pl.appendChild(pi);
@@ -1152,7 +1199,7 @@ function renderPlay(){
   const ng=document.createElement("button");ng.className="j ng";ng.type="button";ng.innerHTML="まだ <small>△</small>";ng.onclick=function(){judge("ng");};
   jd.append(ok,ng);
   const nav=document.createElement("div");nav.className="card-nav";
-  const prev=document.createElement("button");prev.className="link";prev.type="button";prev.textContent="← もどる";prev.disabled=sess.i===0;prev.onclick=function(){if(sess.i>0){sess.i--;renderPlay();}};
+  const prev=document.createElement("button");prev.className="link";prev.type="button";prev.textContent="← もどる";prev.disabled=sess.i===0;prev.onclick=function(){if(sess.i>0){sess.i--;saveSess();renderPlay();}};
   const skip=document.createElement("button");skip.className="link";skip.type="button";skip.textContent="とばす →";skip.onclick=function(){judge("skip");};
   nav.append(prev,skip);
   card.append(jd,nav);
@@ -1164,7 +1211,7 @@ function resultNode(){
   const n=sess.items.length;
   let ok=0,ng=0,sk=0;sess.items.forEach(it=>{const r=sess.res[it.key];if(r==="ok")ok++;else if(r==="ng")ng++;else sk++;});
   const box=document.createElement("section");box.className="result";
-  const ey=document.createElement("p");ey.className="eyebrow";ey.textContent="きょうの結果　"+rangeText();
+  const ey=document.createElement("p");ey.className="eyebrow";ey.textContent="きょうの結果　"+(sess.range||rangeText());
   const h=document.createElement("h2");h.textContent=n+"問 おわり！";
   const tiles=document.createElement("div");tiles.className="tiles";
   [["ok",ok,"できた"],["ng",ng,"まだ"],["sk",sk,"とばした"]].forEach(function(t){
@@ -1179,7 +1226,7 @@ function resultNode(){
   const redo=document.createElement("button");redo.className="btn big";redo.type="button";redo.textContent="△とばした問題だけ もう一回（"+ngItems.length+"問）";
   redo.disabled=!ngItems.length;redo.onclick=function(){startSession(shuffle(ngItems.slice()));};
   const toList=document.createElement("button");toList.className="btn";toList.type="button";toList.textContent="一覧で見る";
-  toList.onclick=function(){mode="list";draw();window.scrollTo({top:0,behavior:"smooth"});};
+  toList.onclick=function(){clearSess();goList();};
   acts.append(again,redo,toList);
   box.append(ey,h,tiles,acts);
   return box;
@@ -1191,10 +1238,18 @@ document.addEventListener("keydown",function(e){
   else if(e.key==="1"){judge("ok");}
   else if(e.key==="2"){judge("ng");}
   else if(e.key==="ArrowRight"){judge("skip");}
-  else if(e.key==="ArrowLeft"){if(sess.i>0){sess.i--;renderPlay();}}
+  else if(e.key==="ArrowLeft"){if(sess.i>0){sess.i--;saveSess();renderPlay();}}
 });
 
 /* ---------- 進捗 ---------- */
+function updateResume(){
+  const box=$("resume");const d=(mode==="list")?readSess():null;
+  if(!d||d.i>=d.keys.length){box.hidden=true;return;}
+  box.hidden=false;
+  const t=$("resumeText");t.replaceChildren();
+  t.appendChild(document.createTextNode("前回のつづきがあります　"+(d.range?d.range+"　":"")));
+  const b=document.createElement("b");b.textContent=(d.i+1)+" / "+d.keys.length+" 問目";t.appendChild(b);
+}
 function tally(){
   const its=scopeItems(),n=its.length;let ok=0;its.forEach(it=>{if(marks[it[2]]==="ok")ok++;});
   $("okN").textContent=ok;$("allN").textContent=n;$("gauge").style.width=(n?ok/n*100:0)+"%";
@@ -1202,6 +1257,8 @@ function tally(){
 
 /* ---------- ボタン ---------- */
 $("start").onclick=function(){startSession(pickItems());};
+$("resumeGo").onclick=function(){const d=readSess();if(d&&restoreSess(d)){enterCard();window.scrollTo({top:$("masthead").offsetHeight-8,behavior:"smooth"});}else{clearSess();draw();}};
+$("resumeDrop").onclick=function(){clearSess();draw();};
 $("showList").onclick=function(){mode="list";draw();listEl.scrollIntoView({behavior:"smooth",block:"start"});};
 function setAll(v){document.querySelectorAll(".ans").forEach(b=>b.dataset.state=v);}
 $("revealAll").onclick=function(){if(mode!=="list"){mode="list";draw();}setAll("2");};
@@ -1266,6 +1323,19 @@ const toTop=$("totop");toTop.onclick=function(){window.scrollTo({top:0,behavior:
 function onScroll(){toTop.classList.toggle("show",window.scrollY>500);}
 window.addEventListener("scroll",onScroll,{passive:true});onScroll();
 
+(function(){
+  try{
+    const p=JSON.parse(localStorage.getItem(PKEY)||"null");
+    if(p){
+      if(Array.isArray(p.sources))sources=p.sources.filter(id=>SRC[id]);
+      if(typeof p.current==="string")current=p.current;
+      if(["all","none","ng","ok"].indexOf(p.filter)>=0)filter=p.filter;
+      if(COUNTS.indexOf(p.count)>=0)count=p.count;
+    }
+  }catch(e){}
+  filterSel.value=filter;
+  try{if(history.state&&history.state.v==="card")history.replaceState(null,"");}catch(e){}
+})();
 draw();
 </script>
 
