@@ -157,6 +157,39 @@ h1 .mark{background:linear-gradient(transparent 64%,color-mix(in srgb,var(--red)
 .cmap .pnum{font-family:var(--ff-b);font-size:17px;font-weight:700;fill:var(--ink)}
 .cmap .cap{fill:var(--red);stroke:var(--paper);stroke-width:1}
 .card-map{align-items:center;margin-left:auto;margin-right:auto}
+.card-map .jpmap{max-height:46vh;width:auto;max-width:100%}
+/* 一覧：地図つき分野は 地図｜問題 の2段組み（広い画面） */
+.split{display:block}
+@media (min-width:900px){
+  .split{display:grid;grid-template-columns:minmax(280px,400px) minmax(0,1fr);gap:0 30px;align-items:start}
+  .mapside{position:sticky;top:12px}
+  .mapside .mapbox{margin-top:14px}
+  .mapside .cmap,.mapside .jpmap{max-height:calc(100vh - 70px);width:auto;max-width:100%}
+  .card.has-map{max-width:1040px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 30px;align-items:start}
+  .card.has-map>*{grid-column:2}
+  .card.has-map>.card-map{grid-column:1;grid-row:1 / span 6;margin:0;position:sticky;top:12px}
+  .card.has-map>.card-map .cmap,.card.has-map>.card-map .jpmap{max-height:calc(100vh - 90px)}
+}
+/* カード：せまい画面では地図を上に貼りつけ、下の答えとボタンだけが動く */
+@media (max-width:899px){
+  .card.has-map>.card-map{position:sticky;top:0;z-index:5;background:var(--paper-2);margin:12px -16px 0;padding:8px 16px 8px;border-bottom:1px solid var(--rule);box-shadow:0 6px 10px -8px rgba(0,0,0,.25)}
+  .card.has-map>.card-map .cmap,.card.has-map>.card-map .jpmap{max-height:36vh}
+  .card.has-map>.card-map.big{position:static;box-shadow:none}
+  .card.has-map>.card-map .mapcap{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin:0}
+  .card.has-map>.card-map{gap:2px}
+}
+/* カード中は下の余白と右下の表示をなくし、地図・答え・ボタンを1画面に収める */
+body.playing footer,body.playing #hud{display:none}
+body.playing .wrap{padding-bottom:28px}
+.ansbox{min-width:0}
+.ans{max-width:100%;overflow-wrap:anywhere}
+/* 一覧で地図が画面外に出たときの呼び出しボタンと拡大表示 */
+#mapfab{position:fixed;left:12px;bottom:14px;z-index:30;font:inherit;font-size:14px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:11px 18px;min-height:44px;box-shadow:0 2px 12px rgba(0,0,0,.28)}
+#mapview{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:14px;cursor:zoom-out}
+#mapview .mv-in{background:var(--paper);border-radius:16px;padding:12px 12px 8px;max-width:min(580px,100%);max-height:94vh;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:4px}
+#mapview .mapbox{margin:0;align-items:center}
+#mapview .cmap,#mapview .jpmap{max-height:80vh;width:auto;max-width:100%}
+#mapview .mv-close{font-size:12.5px;color:var(--ink-3);margin:0}
 .card-map .cmap{max-height:46vh;width:auto;max-width:100%;cursor:zoom-in}
 .card-map.big .cmap{max-height:none;width:100%;max-width:520px;cursor:zoom-out}
 
@@ -249,7 +282,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{
-  .bar,.marks,.no-print,#hud,#play{display:none!important}
+  .bar,.marks,.no-print,#hud,#play,#mapfab,#mapview{display:none!important}
   #list{display:block!important}
   body{background:#fff;color:#000;font-size:11pt}
   .q{break-inside:avoid}
@@ -269,7 +302,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v19 ・ 9/19更新</span>
+      <span id="ver">v20 ・ 9/19更新</span>
     </div>
   </header>
 
@@ -327,6 +360,9 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
 
   <main id="list"></main>
   <main id="play" hidden></main>
+
+  <button id="mapfab" type="button" hidden>地図を見る</button>
+  <div id="mapview" hidden></div>
 
   <div id="hud">
     <span class="pill" aria-live="polite">
@@ -1050,10 +1086,11 @@ function qNode(it,no){
 }
 function draw(){
   drawSources();drawUnits();drawCounts();
+  document.body.classList.toggle("playing",mode==="card");
   barEl.hidden=(mode==="card");
   listEl.hidden=(mode==="card");
   playEl.hidden=(mode!=="card");
-  if(mode==="card"){renderPlay();tally();return;}
+  if(mode==="card"){renderPlay();tally();updateFab();return;}
   listEl.replaceChildren();
   let no=0,shown=0;
   sections().filter(s=>current==="all"||s.id===current).forEach(function(s){
@@ -1061,12 +1098,19 @@ function draw(){
     if(!items.length)return;
     const sec=document.createElement("section");sec.className="sec";
     sec.appendChild(head(s.title,((SRC[s.from]||{}).short||"")+"　"+s.page));
-    if(s.figure)sec.appendChild(mapNode(s.figure));
-    items.forEach(function(it){no++;shown++;sec.appendChild(qNode(it,no));});
+    let host=sec;
+    if(s.figure){
+      sec.classList.add("has-map");sec.dataset.fig=s.figure;
+      const sp=document.createElement("div");sp.className="split";
+      const as=document.createElement("aside");as.className="mapside";as.appendChild(mapNode(s.figure));
+      const qs=document.createElement("div");qs.className="qs";
+      sp.append(as,qs);sec.appendChild(sp);host=qs;
+    }
+    items.forEach(function(it){no++;shown++;host.appendChild(qNode(it,no));});
     listEl.appendChild(sec);
   });
   if(!shown){const p=document.createElement("p");p.className="empty";p.textContent=EMPTY[filter];listEl.replaceChildren(p);}
-  tally();
+  tally();updateFab();
 }
 
 /* ---------- カード形式 ---------- */
@@ -1101,7 +1145,7 @@ function renderPlay(){
   const tag=document.createElement("p");tag.className="tag";tag.textContent=(it.short?it.short+"　":"")+it.sec;
   const q=document.createElement("p");q.className="card-q";q.appendChild(rubyFrag(it.q));
   card.append(tag,q);
-  if(it.fig){const mb=mapNode(it.fig);mb.classList.add("card-map");if(it.fig!=="map"){mb.onclick=function(){mb.classList.toggle("big");};const c=mb.querySelector(".mapcap");if(c)c.textContent="地図をタップすると大きくなります　／　"+c.textContent;}card.appendChild(mb);}
+  if(it.fig){card.classList.add("has-map");const mb=mapNode(it.fig);mb.classList.add("card-map");if(it.fig!=="map"){mb.onclick=function(){mb.classList.toggle("big");};const c=mb.querySelector(".mapcap");if(c)c.textContent="タップで拡大・出典：地球地図日本（国土地理院）";}card.appendChild(mb);}
   card.appendChild(ansBtn(it.a,"sheet"));
   const jd=document.createElement("div");jd.className="judge";
   const ok=document.createElement("button");ok.className="j ok";ok.type="button";ok.innerHTML="できた <small>◯</small>";ok.onclick=function(){judge("ok");};
@@ -1191,6 +1235,32 @@ $("xferLoad").onclick=function(){
   let n=0;Object.keys(d.marks).forEach(function(k){const v=d.marks[k];if(v==="ok"||v==="ng"){marks[k]=v;n++;}});
   save();draw();xferOut.value=xferText();xferIn.value="";flash("xferMsg2",n+"件を読み込みました");
 };
+
+const mapFab=$("mapfab"),mapView=$("mapview");let fabFig=null;
+function updateFab(){
+  let fig=null;
+  if(mode==="list"){
+    document.querySelectorAll(".sec.has-map").forEach(function(sec){
+      const r=sec.getBoundingClientRect();
+      if(r.top<window.innerHeight*0.55&&r.bottom>120){
+        const m=sec.querySelector(".mapbox");
+        if(m&&m.getBoundingClientRect().bottom<40)fig=sec.dataset.fig;
+      }
+    });
+  }
+  fabFig=fig;mapFab.hidden=!fig;
+}
+mapFab.onclick=function(){
+  if(!fabFig)return;
+  const inner=document.createElement("div");inner.className="mv-in";
+  inner.appendChild(mapNode(fabFig));
+  const p=document.createElement("p");p.className="mv-close";p.textContent="どこかをタップすると閉じます";inner.appendChild(p);
+  mapView.replaceChildren(inner);mapView.hidden=false;
+};
+mapView.onclick=function(){mapView.hidden=true;mapView.replaceChildren();};
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!mapView.hidden){mapView.hidden=true;mapView.replaceChildren();}});
+window.addEventListener("scroll",updateFab,{passive:true});
+window.addEventListener("resize",updateFab);
 
 const toTop=$("totop");toTop.onclick=function(){window.scrollTo({top:0,behavior:"smooth"});};
 function onScroll(){toTop.classList.toggle("show",window.scrollY>500);}
