@@ -1,0 +1,31 @@
+const {spawn}=require("child_process");const fs=require("fs");const path=require("path");
+const CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";const PORT=9361;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ const prof=fs.mkdtempSync("/tmp/cdp-");
+ const ch=spawn(CH,["--headless=new","--disable-gpu","--remote-debugging-port="+PORT,"--user-data-dir="+prof,"about:blank"],{stdio:"ignore"});
+ let tabs=null;for(let i=0;i<40;i++){try{tabs=await (await fetch("http://127.0.0.1:"+PORT+"/json")).json();if(tabs.length)break;}catch(e){}await sleep(250);}
+ const ws=new WebSocket(tabs.find(t=>t.type==="page").webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener("open",r));
+ let id=0;const pend={};ws.addEventListener("message",ev=>{const m=JSON.parse(ev.data);if(m.id&&pend[m.id]){pend[m.id](m.result||m);delete pend[m.id];}});
+ const send=(m,p={})=>new Promise(r=>{const i=++id;pend[i]=r;ws.send(JSON.stringify({id:i,method:m,params:p}));});
+ const ev=async x=>{const r=await send("Runtime.evaluate",{expression:x,awaitPromise:true,returnByValue:true});return r.result?r.result.value:r;};
+ await send("Page.enable");await send("Page.navigate",{url:"file://"+path.resolve("t.html")});await sleep(1600);
+ const out=[];const ok=(n,c,d)=>out.push((c?"OK   ":"FAIL ")+n+(d!==undefined?"  ("+d+")":""));
+ await ev("localStorage.clear();draw();1");
+ ok("最初は社会", await ev("subject")==="社会", await ev("subject+' '+total+'問'"));
+ await ev('$("subjects").children[1].click();1');await sleep(300);
+ ok("理科に切り替え", (await ev("subject"))==="理科" && (await ev("total"))===399, await ev("subject+' '+total+'問'"));
+ ok("はんいの一覧は理科だけ", (await ev('subSrc().map(x=>x.short).join(",")'))==="理科");
+ ok("ジャンルも理科だけ", (await ev('unitSel.options.length'))===19, await ev('unitSel.options[1].textContent'));
+ await ev('current="ri5";count=10;draw();$("start").click();judge("ok");judge("ok");judge("ng");1');await sleep(400);
+ ok("理科で3問に印", (await ev("Object.keys(marks).length"))===3);
+ await ev('goList();$("subjects").children[0].click();1');await sleep(400);
+ ok("社会にもどる", (await ev("subject"))==="社会" && (await ev("total"))===1482);
+ ok("社会側の進捗は0（教科がまざらない）", (await ev('scopeItems().filter(it=>marks[it[2]]==="ok").length'))===0);
+ await ev('$("subjects").children[1].click();1');await sleep(300);
+ ok("理科側の進捗は2", (await ev('scopeItems().filter(it=>marks[it[2]]==="ok").length'))===2);
+ await send("Page.reload",{});await sleep(1700);
+ ok("開き直すと理科のまま", (await ev("subject"))==="理科", await ev("subject"));
+ ok("記録も残る", (await ev("Object.keys(marks).length"))===3);
+ console.log(out.join("\n"));ws.close();ch.kill();
+})().catch(e=>{console.error(e);process.exit(1);});
