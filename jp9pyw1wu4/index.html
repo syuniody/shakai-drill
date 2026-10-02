@@ -245,6 +245,23 @@ body.playing .wrap{padding-bottom:28px}
 .keys{margin:14px auto 0;max-width:720px;font-size:12.5px;color:var(--ink-3);text-align:center}
 
 /* 結果 */
+/* フラッシュ暗記 */
+.fl-top{display:flex;align-items:center;gap:10px 12px;padding:14px 0 6px;font-size:14px;color:var(--ink-2);flex-wrap:wrap}
+.fl-top .ctr{margin-left:auto;font-family:var(--ff-m);font-size:14px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fl-card{border:1px solid var(--rule-2);border-radius:18px;background:var(--paper-2);padding:26px 22px;max-width:720px;margin:0 auto;min-height:48vh;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.fl-tag{font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;margin:0}
+.fl-q{margin:0;font-size:clamp(20px,5.2vw,27px);line-height:1.75;font-weight:500;text-wrap:pretty}
+.fl-a{margin:0;font-size:clamp(22px,6vw,32px);line-height:1.7;font-weight:700;color:var(--red-ink);min-height:1.7em;opacity:0;transition:opacity .12s linear}
+.fl-a.show{opacity:1}
+.fl-bar{height:5px;background:var(--paper-3);border-radius:999px;overflow:hidden;margin:2px 0 16px}
+.fl-bar i{display:block;height:100%;width:0;background:var(--ink);transition:width .2s linear}
+.fl-ctrl{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:16px;max-width:720px;margin-left:auto;margin-right:auto}
+.fl-ctrl .btn{min-width:84px}
+.fl-speed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;margin-top:12px}
+.fl-note{text-align:center;font-size:12.5px;color:var(--ink-3);margin:12px auto 0;max-width:720px}
+.fl-map{margin:0 auto;max-width:460px}
+.fl-map .cmap,.fl-map .jpmap{max-height:34vh;width:auto;max-width:100%}
+@media (max-width:720px){.fl-card{padding:20px 16px;min-height:44vh}}
 .result{max-width:720px;margin:0 auto;border:1px solid var(--rule-2);border-radius:18px;background:var(--paper-2);padding:30px 24px 26px;text-align:center}
 .result .eyebrow{margin-bottom:6px}
 .result h2{font-family:var(--ff-d);font-weight:600;font-size:30px;margin:0 0 18px;letter-spacing:.02em}
@@ -260,37 +277,6 @@ body.playing .wrap{padding-bottom:28px}
 .actions .btn:disabled{opacity:.45;cursor:default}
 
 /* 右下 */
-/* フラッシュ暗算 */
-#flashWrap{max-width:720px;margin:0 auto}
-.fset{display:flex;flex-direction:column;gap:12px;padding:18px 0 4px}
-.frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-.frow .lab{min-width:3.6em}
-.fstage{
-  margin:18px auto 0;max-width:720px;min-height:46vh;border:1px solid var(--rule-2);border-radius:18px;
-  background:var(--paper-2);display:grid;place-items:center;padding:20px;position:relative;
-}
-.fnum{font-family:var(--ff-m);font-weight:700;font-size:clamp(64px,22vw,140px);line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.02em}
-.fnum.minus{color:var(--red)}
-.fcount{font-family:var(--ff-d);font-size:clamp(56px,18vw,120px);color:var(--ink-3)}
-.fmsg{font-size:17px;color:var(--ink-2);text-align:center;line-height:1.9}
-.fbadge{position:absolute;top:12px;right:16px;font-family:var(--ff-m);font-size:13px;color:var(--ink-3)}
-.fans{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:18px}
-.finput{
-  font-family:var(--ff-m);font-size:40px;font-weight:700;text-align:center;letter-spacing:.06em;
-  width:100%;max-width:340px;padding:10px 14px;border:2px solid var(--rule-2);border-radius:12px;
-  background:var(--paper);color:var(--ink);font-variant-numeric:tabular-nums;min-height:66px;
-}
-.finput.ok{border-color:var(--green);color:var(--green)}
-.finput.ng{border-color:var(--red);color:var(--red)}
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px}
-.key{font:inherit;font-family:var(--ff-m);font-size:26px;font-weight:700;min-height:62px;border-radius:12px;border:1px solid var(--rule-2);background:var(--paper-2);color:var(--ink);cursor:pointer}
-.key:active{background:var(--paper-3)}
-.key.wide{grid-column:span 2}
-.key.go{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.key.del{color:var(--red)}
-.fhist{font-size:13px;color:var(--ink-3);margin:14px 0 0;line-height:1.9}
-.freview{margin-top:14px;font-family:var(--ff-m);font-size:15px;color:var(--ink-2);line-height:2;word-break:break-all}
-.freview b{color:var(--ink)}
 #hud{position:fixed;right:14px;bottom:16px;z-index:30;display:flex;align-items:center;gap:8px}
 .pill{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;background:var(--paper-2);border:1px solid var(--rule-2);border-radius:999px;padding:9px 16px;font-family:var(--ff-m);font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;box-shadow:0 2px 10px rgba(0,0,0,.18)}
 .pill b{color:var(--ink);font-weight:700}
@@ -350,12 +336,12 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
   <header class="masthead" id="masthead">
     <p class="eyebrow">社会・理科　赤シート式</p>
     <h1>小学生　<span class="mark">一問一答</span>ドリル</h1>
-    <p class="lede" id="lede">教科とはんいと問題数を選んで「はじめる」を押すと、1問ずつ出ます。赤いところを1回押すとヒント、もう一度押すと答えです。</p>
+    <p class="lede">教科とはんいと問題数を選んで「はじめる」を押すと、1問ずつ出ます。赤いところを1回押すとヒント、もう一度押すと答えです。</p>
     <div class="meta">
-      <span class="mcount">全<span id="total">0</span>問</span>
-      <span class="mcount">出典 <span id="nsrc">0</span></span>
-      <span class="mcount">分野 <span id="nsec">0</span></span>
-      <span id="ver">v31 ・ 10/2更新</span>
+      <span>全<span id="total">0</span>問</span>
+      <span>出典 <span id="nsrc">0</span></span>
+      <span>分野 <span id="nsec">0</span></span>
+      <span id="ver">v32 ・ 10/2更新</span>
     </div>
   </header>
 
@@ -385,7 +371,7 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
         <button class="btn primary" id="resumeGo" type="button">つづきから</button>
         <button class="btn small" id="resumeDrop" type="button">やめて消す</button>
       </div>
-      <div class="row2" id="subjRow">
+      <div class="row2">
         <span class="lab">教科</span>
         <span class="chips" id="subjects"></span>
       </div>
@@ -411,6 +397,7 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
         <span class="lab">何問</span>
         <span class="chips" id="counts"></span>
         <button class="btn primary big" id="start" type="button">はじめる</button>
+        <button class="btn big" id="flashStart" type="button">フラッシュ暗記</button>
       </div>
       <div class="row2 sub">
         <button class="btn small" id="showList" type="button">一覧で見る</button>
@@ -452,38 +439,6 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
 
   <main id="list"></main>
   <main id="play" hidden></main>
-  <main id="flashWrap" hidden>
-    <div class="fset" id="fset">
-      <div class="frow">
-        <span class="lab">レベル</span>
-        <span class="chips" id="flevel"></span>
-      </div>
-      <div class="frow">
-        <span class="lab">けた</span><span class="chips" id="fdigits"></span>
-        <span class="lab">口数</span><span class="chips" id="fterms"></span>
-      </div>
-      <div class="frow">
-        <span class="lab">はやさ</span><span class="chips" id="fspeed"></span>
-      </div>
-      <div class="frow">
-        <span class="lab">何問</span><span class="chips" id="fcount"></span>
-        <button class="btn small" id="fminus" type="button" aria-pressed="false">ひき算もまぜる</button>
-      </div>
-      <div class="frow">
-        <button class="btn primary big" id="fstart" type="button">スタート</button>
-        <span class="msg" id="fmsg"></span>
-      </div>
-      <p class="fhist" id="fhist"></p>
-    </div>
-    <div class="fstage" id="fstage" hidden>
-      <span class="fbadge" id="fbadge"></span>
-      <div id="fstageIn"></div>
-    </div>
-    <div class="fans" id="fans" hidden>
-      <input class="finput" id="finput" type="text" inputmode="none" readonly placeholder="こたえ">
-      <div class="keypad" id="fkeys"></div>
-    </div>
-  </main>
 
   <button id="mapfab" type="button" hidden>地図を見る</button>
   <div id="mapview" hidden></div>
@@ -2906,9 +2861,10 @@ const save=()=>{
 /* ---------- 状態 ---------- */
 const COUNTS=[10,20,30,50,0];
 let subject="社会", sources=[], current="all", filter="all", count=20;
-let mode="list", sess=null;
+let mode="list", sess=null, fl=null, flTimer=null;
 const PKEY="env-drill-prefs", SKEY="env-drill-session";
-function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify({subject:subject,sources:sources,current:current,filter:filter,count:count}));}catch(e){}}
+let flSpeed=1;
+function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify({subject:subject,sources:sources,current:current,filter:filter,count:count,flSpeed:flSpeed}));}catch(e){}}
 function saveSess(){
   if(!sess)return;
   try{localStorage.setItem(SKEY,JSON.stringify({v:1,keys:sess.items.map(x=>x.key),i:sess.i,res:sess.res,range:sess.range||"",t:Date.now()}));}catch(e){}
@@ -2922,7 +2878,6 @@ function readSess(){
   }catch(e){return null;}
 }
 const SRC={};SOURCES.forEach(x=>SRC[x.id]=x);
-const LEDE="教科とはんいと問題数を選んで「はじめる」を押すと、1問ずつ出ます。赤いところを1回押すとヒント、もう一度押すと答えです。";
 const SUBJECTS=SOURCES.map(x=>x.subject).filter((x,i,a)=>a.indexOf(x)===i);
 function subSrc(){return SOURCES.filter(x=>x.subject===subject);}
 function subSecs(){return DATA.filter(x=>(SRC[x.from]||{}).subject===subject);}
@@ -2952,7 +2907,7 @@ function maskOf(a){return Array.from(a).map((c,i)=>i===0?c:(KEEP.indexOf(c)>=0?c
 const EMPTY={ok:"◯をつけた問題はありません。",ng:"△をつけた問題はありません。",none:"まだの問題はありません。全部やりました。",all:"該当する問題がありません。"};
 
 /* ---------- 操作パネル ---------- */
-function refresh(){savePrefs();if(mode==="card"){mode="list";}draw();}
+function refresh(){savePrefs();if(mode==="card"||mode==="flash"){flClear();fl=null;mode="list";}draw();}
 function optRow(label,n,on,fn){
   const b=document.createElement("button");b.className="opt";b.type="button";b.setAttribute("role","menuitemcheckbox");b.setAttribute("aria-checked",String(on));
   const box=document.createElement("span");box.className="box";box.textContent="✓";
@@ -2962,13 +2917,13 @@ function optRow(label,n,on,fn){
 }
 function srcText(){if(!sources.length)return "すべて";if(sources.length<=2)return sources.map(id=>(SRC[id]||{}).short).join("・");return sources.length+"件を選択";}
 function drawSubjects(){
-  $("subjects").replaceChildren(...SUBJECTS.concat(["暗算"]).map(function(sb){
+  $("subjects").replaceChildren(...SUBJECTS.map(function(sb){
     const b=document.createElement("button");b.className="tab";b.type="button";
     b.setAttribute("aria-selected",String(sb===subject));
     const n=DATA.filter(d=>(SRC[d.from]||{}).subject===sb).reduce((a,d)=>a+d.items.length,0);
-    b.appendChild(document.createTextNode(sb==="暗算"?"フラッシュ暗算":sb));
-    if(sb!=="暗算"){const sp=document.createElement("span");sp.className="n";sp.textContent=n;b.appendChild(sp);}
-    b.onclick=function(){if(sb===subject)return;if(subject==="暗算")stopFlash();subject=sb;sources=[];current="all";savePrefs();recount();refresh();};
+    b.appendChild(document.createTextNode(sb));
+    const sp=document.createElement("span");sp.className="n";sp.textContent=n;b.appendChild(sp);
+    b.onclick=function(){if(sb===subject)return;subject=sb;sources=[];current="all";recount();refresh();};
     return b;
   }));
 }
@@ -3095,27 +3050,13 @@ function qNode(it,no){
   el.append(num,ask,box,mk);return el;
 }
 function draw(){
-  if(subject!=="暗算")recount();
-  drawSubjects();
-  if(subject==="暗算"){}else{drawSources();drawUnits();drawCounts();}
-  document.body.classList.toggle("playing",mode==="card");
-  const fl=(subject==="暗算");
-  $("flashWrap").hidden=!fl;
-  document.querySelectorAll(".bar .row2").forEach(function(el){if(el.id!=="subjRow")el.hidden=fl;});
-  document.querySelector(".bar .hint").hidden=fl;
-  document.querySelectorAll(".mcount").forEach(function(el){el.hidden=fl;});
-  $("hud").hidden=fl;
-  if(fl){
-    document.body.classList.remove("playing");
-    barEl.hidden=false;listEl.hidden=true;playEl.hidden=true;
-    $("resume").hidden=true;$("undoBar").hidden=true;$("saveNudge").hidden=true;$("xferPanel").hidden=true;
-    $("lede").textContent="数字が次つぎに出ます。ぜんぶたしたこたえを入力してください。レベルをえらんで「スタート」を押します。";
-    drawSubjects();drawFset();return;
-  }
-  $("lede").textContent=LEDE;
-  barEl.hidden=(mode==="card");
-  listEl.hidden=(mode==="card");
-  playEl.hidden=(mode!=="card");
+  recount();drawSubjects();drawSources();drawUnits();drawCounts();
+  const playing=(mode==="card"||mode==="flash");
+  document.body.classList.toggle("playing",playing);
+  barEl.hidden=playing;
+  listEl.hidden=playing;
+  playEl.hidden=!playing;
+  if(mode==="flash"){renderFlash();tally();updateFab();updateResume();updateNotices();return;}
   if(mode==="card"){renderPlay();tally();updateFab();updateResume();updateNotices();return;}
   listEl.replaceChildren();
   let no=0,shown=0;
@@ -3152,6 +3093,7 @@ function goList(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 window.addEventListener("popstate",function(e){
+  if(mode==="flash"&&!(e.state&&e.state.v==="card")){flClear();fl=null;mode="list";draw();return;}
   if(e.state&&e.state.v==="card"){
     if(sess){mode="card";draw();}
     else{const d=readSess();if(d&&restoreSess(d)){mode="card";draw();}else{mode="list";draw();}}
@@ -3164,6 +3106,107 @@ function restoreSess(d){
   sess={items:items,i:Math.min(d.i||0,items.length),res:d.res||{},range:d.range||""};
   return true;
 }
+const FLSP=[{name:"ゆっくり",q:3200,a:2600},{name:"ふつう",q:2200,a:1800},{name:"はやい",q:1500,a:1200},{name:"とてもはやい",q:1000,a:900}];
+function startFlash(items){
+  if(!items.length){mode="list";draw();return;}
+  fl={items:items,i:0,phase:"q",paused:false,range:rangeText()};
+  mode="flash";
+  try{if(!(history.state&&history.state.v==="card"))history.pushState({v:"card"},"");}catch(e){}
+  draw();
+  flTick();
+  window.scrollTo({top:$("masthead").offsetHeight-8,behavior:"smooth"});
+}
+function flClear(){clearTimeout(flTimer);flTimer=null;}
+function flTick(){
+  flClear();
+  if(!fl||fl.paused)return;
+  const sp=FLSP[flSpeed];
+  if(fl.phase==="q")flTimer=setTimeout(function(){fl.phase="a";renderFlash();flTick();},sp.q);
+  else flTimer=setTimeout(function(){
+    if(fl.i+1>=fl.items.length){fl.phase="end";renderFlash();return;}
+    fl.i++;fl.phase="q";renderFlash();flTick();
+  },sp.a);
+}
+function flGo(d){
+  if(!fl)return;
+  flClear();
+  if(fl.phase==="end"&&d<0){fl.phase="a";renderFlash();return;}
+  const ni=fl.i+d;
+  if(ni<0||ni>=fl.items.length)return;
+  fl.i=ni;fl.phase="q";renderFlash();flTick();
+}
+function flPause(on){
+  if(!fl)return;
+  fl.paused=on;
+  if(on)flClear();else flTick();
+  renderFlash();
+}
+function renderFlash(){
+  playEl.replaceChildren();
+  if(!fl)return;
+  const n=fl.items.length;
+  const top=document.createElement("div");top.className="fl-top";
+  const back=document.createElement("button");back.className="link";back.type="button";back.textContent="← 設定にもどる";
+  back.onclick=function(){flClear();fl=null;goList();};
+  const range=document.createElement("span");range.className="range";range.textContent=fl.range;
+  const ctr=document.createElement("span");ctr.className="ctr";ctr.textContent=(fl.phase==="end"?n:fl.i+1)+" / "+n;
+  top.append(back,range,ctr);
+  const bar=document.createElement("div");bar.className="fl-bar";
+  const bi=document.createElement("i");bi.style.width=((fl.phase==="end"?n:fl.i)/n*100)+"%";bar.appendChild(bi);
+  playEl.append(top,bar);
+
+  if(fl.phase==="end"){
+    const box=document.createElement("section");box.className="result";
+    const h=document.createElement("h2");h.textContent=n+"問 おわり！";
+    const p=fmsgFlash("同じはんいでもう一度見るか、設定にもどれます。");
+    const acts=document.createElement("div");acts.className="actions";
+    const again=document.createElement("button");again.className="btn primary big";again.type="button";again.textContent="同じ問題をもう一回";
+    again.onclick=function(){fl.i=0;fl.phase="q";renderFlash();flTick();};
+    const other=document.createElement("button");other.className="btn big";other.type="button";other.textContent="べつの問題で";
+    other.onclick=function(){startFlash(pickItems());};
+    const toCard=document.createElement("button");toCard.className="btn";toCard.type="button";toCard.textContent="1問ずつ答える";
+    toCard.onclick=function(){const it=fl.items.slice();flClear();fl=null;startSession(it);};
+    acts.append(again,other,toCard);
+    box.append(h,p,acts);
+    playEl.appendChild(box);
+    return;
+  }
+
+  const it=fl.items[fl.i];
+  const card=document.createElement("section");card.className="fl-card";
+  const tag=document.createElement("p");tag.className="fl-tag";tag.textContent=(it.short?it.short+"　":"")+it.sec;
+  const q=document.createElement("p");q.className="fl-q";q.appendChild(rubyFrag(it.q));
+  card.append(tag,q);
+  if(it.fig){const mb=mapNode(it.fig);mb.classList.add("fl-map");card.appendChild(mb);}
+  const a=document.createElement("p");a.className="fl-a"+(fl.phase==="a"?" show":"");
+  a.appendChild(rubyFrag(it.a));
+  card.appendChild(a);
+  playEl.appendChild(card);
+
+  const ctrl=document.createElement("div");ctrl.className="fl-ctrl";
+  const prev=document.createElement("button");prev.className="btn";prev.type="button";prev.textContent="← まえ";prev.disabled=(fl.i===0);
+  prev.onclick=function(){flGo(-1);};
+  const pause=document.createElement("button");pause.className="btn primary";pause.type="button";pause.textContent=fl.paused?"さいせい":"一時停止";
+  pause.onclick=function(){flPause(!fl.paused);};
+  const next=document.createElement("button");next.className="btn";next.type="button";next.textContent="つぎ →";
+  next.onclick=function(){if(fl.phase==="q"){flClear();fl.phase="a";renderFlash();flTick();}else flGo(1);};
+  ctrl.append(prev,pause,next);
+  playEl.appendChild(ctrl);
+
+  const sp=document.createElement("div");sp.className="fl-speed";
+  const lab=document.createElement("span");lab.className="lab";lab.textContent="はやさ";sp.appendChild(lab);
+  FLSP.forEach(function(x,i){
+    const b=document.createElement("button");b.className="tab";b.type="button";
+    b.setAttribute("aria-selected",String(i===flSpeed));b.textContent=x.name;
+    b.onclick=function(){flSpeed=i;savePrefs();renderFlash();flTick();};
+    sp.appendChild(b);
+  });
+  playEl.appendChild(sp);
+  const note=document.createElement("p");note.className="fl-note";
+  note.textContent="画面を見ているだけで、問題と答えが順に出ます。◯△の記録はつきません。";
+  playEl.appendChild(note);
+}
+function fmsgFlash(t){const p=document.createElement("p");p.style.color="var(--ink-2)";p.style.margin="0 0 18px";p.textContent=t;return p;}
 function startSession(items){
   if(!items.length){mode="list";draw();return;}
   sess={items:items,i:0,res:{},range:rangeText()};
@@ -3236,6 +3279,13 @@ function resultNode(){
   return box;
 }
 document.addEventListener("keydown",function(e){
+  if(mode==="flash"&&fl){
+    const tag=(e.target&&e.target.tagName)||"";if(tag==="TEXTAREA"||tag==="INPUT"||tag==="SELECT")return;
+    if(e.key===" "){e.preventDefault();flPause(!fl.paused);}
+    else if(e.key==="ArrowRight"){e.preventDefault();flGo(1);}
+    else if(e.key==="ArrowLeft"){e.preventDefault();flGo(-1);}
+    return;
+  }
   if(mode!=="card"||!sess||sess.i>=sess.items.length)return;
   const tag=(e.target&&e.target.tagName)||"";if(tag==="TEXTAREA"||tag==="INPUT"||tag==="SELECT")return;
   if(e.key===" "||e.key==="Enter"){const s=playEl.querySelector(".sheet");if(s){e.preventDefault();s.click();}}
@@ -3261,9 +3311,10 @@ function tally(){
 
 /* ---------- ボタン ---------- */
 $("start").onclick=function(){startSession(pickItems());};
+$("flashStart").onclick=function(){startFlash(pickItems());};
 $("resumeGo").onclick=function(){const d=readSess();if(d&&restoreSess(d)){enterCard();window.scrollTo({top:$("masthead").offsetHeight-8,behavior:"smooth"});}else{clearSess();draw();}};
 $("resumeDrop").onclick=function(){clearSess();draw();};
-$("showList").onclick=function(){mode="list";draw();listEl.scrollIntoView({behavior:"smooth",block:"start"});};
+$("showList").onclick=function(){flClear();fl=null;mode="list";draw();listEl.scrollIntoView({behavior:"smooth",block:"start"});};
 function setAll(v){document.querySelectorAll(".ans").forEach(b=>b.dataset.state=v);}
 $("revealAll").onclick=function(){if(mode!=="list"){mode="list";draw();}setAll("2");};
 $("hideAll").onclick=function(){setAll("0");};
@@ -3401,150 +3452,6 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!mapView.hi
 window.addEventListener("scroll",updateFab,{passive:true});
 window.addEventListener("resize",updateFab);
 
-/* ================= フラッシュ暗算 ================= */
-const FKEY2="env-drill-flash";
-const FLEVELS=[
- {name:"1",d:1,t:3,ms:900},{name:"2",d:1,t:5,ms:750},{name:"3",d:1,t:8,ms:600},
- {name:"4",d:2,t:5,ms:750},{name:"5",d:2,t:8,ms:600},{name:"6",d:2,t:10,ms:450},
- {name:"7",d:3,t:5,ms:700},{name:"8",d:3,t:10,ms:500}
-];
-const FSPEEDS=[{name:"ゆっくり",ms:900},{name:"ふつう",ms:700},{name:"はやい",ms:500},{name:"とてもはやい",ms:350}];
-let fset={d:1,t:5,ms:750,n:10,minus:false},fsess=null,ftimer=null;
-function fload(){try{const o=JSON.parse(localStorage.getItem(FKEY2)||"null");if(o&&o.set)fset=Object.assign(fset,o.set);return o||{};}catch(e){return {};}}
-function fsave(extra){try{const o=fload();localStorage.setItem(FKEY2,JSON.stringify(Object.assign(o,{set:fset},extra||{})));}catch(e){}}
-function chip(label,on,fn){
-  const b=document.createElement("button");b.className="tab";b.type="button";
-  b.setAttribute("aria-selected",String(on));b.textContent=label;b.onclick=fn;return b;
-}
-function drawFset(){
-  $("flevel").replaceChildren(...FLEVELS.map(function(L){
-    const on=(fset.d===L.d&&fset.t===L.t&&fset.ms===L.ms);
-    return chip("レベル"+L.name,on,function(){fset.d=L.d;fset.t=L.t;fset.ms=L.ms;fsave();drawFset();});
-  }));
-  $("fdigits").replaceChildren(...[1,2,3].map(d=>chip(d+"けた",fset.d===d,function(){fset.d=d;fsave();drawFset();})));
-  $("fterms").replaceChildren(...[3,5,8,10,15].map(t=>chip(t+"口",fset.t===t,function(){fset.t=t;fsave();drawFset();})));
-  $("fspeed").replaceChildren(...FSPEEDS.map(sp=>chip(sp.name,fset.ms===sp.ms,function(){fset.ms=sp.ms;fsave();drawFset();})));
-  $("fcount").replaceChildren(...[5,10,20].map(n=>chip(n+"問",fset.n===n,function(){fset.n=n;fsave();drawFset();})));
-  const mb=$("fminus");mb.setAttribute("aria-pressed",String(fset.minus));mb.classList.toggle("on",fset.minus);
-  const h=fload().hist||[];
-  $("fhist").textContent=h.length?("前回までの記録：　"+h.slice(0,3).map(r=>r.d+"けた"+r.t+"口　"+r.correct+"／"+r.n+"問").join("　／　")):"まだ記録はありません。レベルをえらんで「スタート」を押してください。";
-}
-function makeQ(){
-  const lo=fset.d===1?1:(fset.d===2?10:100), hi=fset.d===1?9:(fset.d===2?99:999);
-  const ns=[];let sum=0;
-  for(let i=0;i<fset.t;i++){
-    let v=lo+Math.floor(Math.random()*(hi-lo+1));
-    if(fset.minus&&i>0&&Math.random()<0.4&&sum-v>=0)v=-v;
-    ns.push(v);sum+=v;
-  }
-  return {ns:ns,sum:sum};
-}
-function fshow(el){const st=$("fstageIn");st.replaceChildren(el);}
-function fbig(txt,cls){const d=document.createElement("div");d.className=cls||"fnum";d.textContent=txt;return d;}
-function fmsgNode(txt){const d=document.createElement("div");d.className="fmsg";txt.split("\n").forEach(function(t,i){if(i)d.appendChild(document.createElement("br"));d.appendChild(document.createTextNode(t));});return d;}
-function startFlash(){
-  fsess={qs:[],i:0,correct:0,t0:Date.now()};
-  for(let i=0;i<fset.n;i++)fsess.qs.push(makeQ());
-  $("fset").hidden=true;$("fstage").hidden=false;$("fans").hidden=true;
-  runQ();
-}
-function runQ(){
-  if(!fsess)return;
-  if(fsess.i>=fsess.qs.length)return finishFlash();
-  const q=fsess.qs[fsess.i];
-  $("fbadge").textContent=(fsess.i+1)+" / "+fsess.qs.length;
-  let k=3;
-  fshow(fbig(String(k),"fcount"));
-  ftimer=setInterval(function(){
-    k--;
-    if(k>0){fshow(fbig(String(k),"fcount"));return;}
-    clearInterval(ftimer);flashNums(q);
-  },600);
-}
-function flashNums(q){
-  let i=0;
-  const on=fset.ms,off=Math.max(90,Math.round(fset.ms*0.3));
-  (function step(){
-    if(!fsess)return;
-    if(i>=q.ns.length){askAnswer();return;}
-    const v=q.ns[i++];
-    fshow(fbig((v<0?"−":"")+Math.abs(v),"fnum"+(v<0?" minus":"")));
-    ftimer=setTimeout(function(){fshow(document.createTextNode(""));ftimer=setTimeout(step,off);},on);
-  })();
-}
-function askAnswer(){
-  fshow(fmsgNode("こたえは？"));
-  const inp=$("finput");inp.value="";inp.className="finput";
-  $("fans").hidden=false;
-}
-function keyIn(ch){
-  const inp=$("finput");
-  if(ch==="del")inp.value=inp.value.slice(0,-1);
-  else if(inp.value.length<7)inp.value+=ch;
-}
-function submitAnswer(){
-  if(!fsess||$("fans").hidden)return;
-  const inp=$("finput");if(inp.value==="")return;
-  const q=fsess.qs[fsess.i],got=Number(inp.value),right=(got===q.sum);
-  if(right)fsess.correct++;
-  q.got=got;q.right=right;
-  inp.className="finput "+(right?"ok":"ng");
-  $("fans").hidden=true;
-  fshow(fmsgNode(right?"せいかい！":("ざんねん　こたえは "+q.sum)));
-  ftimer=setTimeout(function(){fsess.i++;runQ();},right?700:1600);
-}
-function finishFlash(){
-  const sec=Math.round((Date.now()-fsess.t0)/1000);
-  const rec={at:Date.now(),d:fset.d,t:fset.t,ms:fset.ms,n:fsess.qs.length,correct:fsess.correct,sec:sec};
-  const o=fload();const hist=[rec].concat(o.hist||[]).slice(0,30);fsave({hist:hist});
-  const box=document.createElement("div");
-  const h=document.createElement("div");h.className="fnum";h.textContent=fsess.correct+" / "+fsess.qs.length;
-  const m=fmsgNode(fset.d+"けた "+fset.t+"口　"+sec+"びょう\nもう一度やるか、下の「もどる」で設定にもどれます。");
-  box.append(h,m);
-  const rev=document.createElement("div");rev.className="freview";
-  fsess.qs.forEach(function(q,i){
-    const line=document.createElement("div");
-    const ok=q.right?"◯":"×";
-    line.appendChild(document.createTextNode(ok+" "+(i+1)+"　"+q.ns.map(v=>(v<0?"−":"+")+Math.abs(v)).join(" ").replace(/^\+/,"")+" ＝ "));
-    const b=document.createElement("b");b.textContent=String(q.sum);line.appendChild(b);
-    if(!q.right&&q.got!==undefined)line.appendChild(document.createTextNode("（こたえた数："+q.got+"）"));
-    rev.appendChild(line);
-  });
-  box.appendChild(rev);
-  const row=document.createElement("div");row.className="frow";row.style.justifyContent="center";row.style.marginTop="14px";
-  const again=document.createElement("button");again.className="btn primary";again.type="button";again.textContent="もう一回";
-  again.onclick=function(){startFlash();};
-  const back=document.createElement("button");back.className="btn";back.type="button";back.textContent="もどる";
-  back.onclick=function(){stopFlash();};
-  row.append(again,back);box.appendChild(row);
-  fshow(box);
-  $("fbadge").textContent="おわり";
-  fsess=null;drawFset();
-}
-function stopFlash(){
-  clearInterval(ftimer);clearTimeout(ftimer);fsess=null;
-  $("fstage").hidden=true;$("fans").hidden=true;$("fset").hidden=false;drawFset();
-}
-$("fstart").onclick=function(){startFlash();};
-$("fminus").onclick=function(){fset.minus=!fset.minus;fsave();drawFset();};
-$("fkeys").replaceChildren(...["7","8","9","4","5","6","1","2","3"].map(function(c){
-  return (function(){const b=document.createElement("button");b.className="key";b.type="button";b.textContent=c;b.onclick=function(){keyIn(c);};return b;})();
-}));
-(function(){
-  const k=$("fkeys");
-  const z=document.createElement("button");z.className="key";z.type="button";z.textContent="0";z.onclick=function(){keyIn("0");};
-  const d=document.createElement("button");d.className="key del";d.type="button";d.textContent="けす";d.onclick=function(){keyIn("del");};
-  const g=document.createElement("button");g.className="key go wide";g.type="button";g.textContent="こたえる";g.onclick=submitAnswer;
-  k.append(z,d,g);
-})();
-document.addEventListener("keydown",function(e){
-  if(subject!=="暗算"||$("fans").hidden)return;
-  if(/^[0-9]$/.test(e.key)){keyIn(e.key);e.preventDefault();}
-  else if(e.key==="Backspace"){keyIn("del");e.preventDefault();}
-  else if(e.key==="Enter"){submitAnswer();e.preventDefault();}
-});
-fload();
-
 const toTop=$("totop");toTop.onclick=function(){window.scrollTo({top:0,behavior:"smooth"});};
 function onScroll(){toTop.classList.toggle("show",window.scrollY>500);}
 window.addEventListener("scroll",onScroll,{passive:true});onScroll();
@@ -3553,11 +3460,12 @@ window.addEventListener("scroll",onScroll,{passive:true});onScroll();
   try{
     const p=JSON.parse(localStorage.getItem(PKEY)||"null");
     if(p){
-      if(p.subject&&(SUBJECTS.indexOf(p.subject)>=0||p.subject==="暗算"))subject=p.subject;
+      if(p.subject&&SUBJECTS.indexOf(p.subject)>=0)subject=p.subject;
       if(Array.isArray(p.sources))sources=p.sources.filter(id=>SRC[id]&&SRC[id].subject===subject);
       if(typeof p.current==="string")current=p.current;
       if(["all","none","ng","ok"].indexOf(p.filter)>=0)filter=p.filter;
       if(COUNTS.indexOf(p.count)>=0)count=p.count;
+      if([0,1,2,3].indexOf(p.flSpeed)>=0)flSpeed=p.flSpeed;
     }
   }catch(e){}
   filterSel.value=filter;
