@@ -1,0 +1,40 @@
+const {spawn}=require("child_process");const fs=require("fs");const path=require("path");
+const CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";const PORT=9395;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ const prof=fs.mkdtempSync("/tmp/cdp-");
+ const ch=spawn(CH,["--headless=new","--disable-gpu","--remote-debugging-port="+PORT,"--user-data-dir="+prof,"about:blank"],{stdio:"ignore"});
+ let tabs=null;for(let i=0;i<40;i++){try{tabs=await (await fetch("http://127.0.0.1:"+PORT+"/json")).json();if(tabs.length)break;}catch(e){}await sleep(250);}
+ const ws=new WebSocket(tabs.find(t=>t.type==="page").webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener("open",r));
+ let id=0;const pend={};const errs=[];
+ ws.addEventListener("message",ev=>{const m=JSON.parse(ev.data);
+   if(m.method==="Runtime.exceptionThrown")errs.push(m.params.exceptionDetails.text+" "+((m.params.exceptionDetails.exception||{}).description||""));
+   if(m.id&&pend[m.id]){pend[m.id](m.result||m);delete pend[m.id];}});
+ const send=(m,p={})=>new Promise(r=>{const i=++id;pend[i]=r;ws.send(JSON.stringify({id:i,method:m,params:p}));});
+ const ev=async x=>{const r=await send("Runtime.evaluate",{expression:x,awaitPromise:true,returnByValue:true});
+   if(r.exceptionDetails)errs.push("eval:"+r.exceptionDetails.text);return r.result?r.result.value:r;};
+ const shot=async n=>{const r=await send("Page.captureScreenshot",{format:"png"});fs.writeFileSync(n,Buffer.from(r.data,"base64"));};
+ await send("Page.enable");await send("Runtime.enable");
+ await send("Emulation.setDeviceMetricsOverride",{width:390,height:900,deviceScaleFactor:1.5,mobile:true});
+ await send("Page.navigate",{url:"file://"+path.resolve("t.html")});await sleep(1800);
+ const out=[];const ok=(n,c,dd)=>out.push((c?"OK   ":"FAIL ")+n+(dd!==undefined?"  ("+dd+")":""));
+ ok("JSエラーなし",errs.length===0,errs.join(" / ")||"なし");
+ ok("教科は 地理・歴史・理科",JSON.stringify(await ev('SUBJECTS'))===JSON.stringify(["地理","歴史","理科"]),JSON.stringify(await ev('SUBJECTS')));
+ ok("歴史の出典3つ",(await ev('SOURCES.filter(x=>x.subject==="歴史").length'))===3,JSON.stringify(await ev('SOURCES.filter(x=>x.subject==="歴史").map(x=>x.short)')));
+ const hn=await ev('DATA.filter(s=>(SRC[s.from]||{}).subject==="歴史").reduce((a,s)=>a+s.items.length,0)');
+ ok("歴史の問題数",hn===162,hn+"問");
+ ok("地理の問題数が変わっていない",(await ev('DATA.filter(s=>(SRC[s.from]||{}).subject==="地理").reduce((a,s)=>a+s.items.length,0)'))>0,await ev('DATA.filter(s=>(SRC[s.from]||{}).subject==="地理").reduce((a,s)=>a+s.items.length,0)')+"問");
+ ok("東北の記録キーが保てている",(await ev('DATA.find(s=>s.id==="th6").items[9][1]'))==="南部鉄器");
+ // 歴史に切りかえて出題
+ await ev('localStorage.clear();subject="歴史";sources=["hi34"];current="all";recount&&recount();refresh&&refresh();1');await sleep(500);
+ const pn=await ev('pool().length');ok("単元34だけ選んだときの問題数",pn===49,pn+"問");
+ await ev(`(function(){const s=DATA.find(x=>x.id==="hz34c");const i=s.items.findIndex(it=>/三内丸山/.test(it[0]));
+   sess={items:[rows(s)[i]],i:0,res:{},range:"テスト"};mode="card";draw();})();1`);await sleep(400);
+ ok("歴史の問題がカードで出る",(await ev('document.querySelector(".card-q").textContent.indexOf("三内丸山")>0'))!==false,await ev('document.querySelector(".card-q").textContent.slice(0,30)'));
+ ok("歴史の問題に地図が出ない",!(await ev('!!document.querySelector(".card-map")')));
+ await shot("h1.png");
+ await ev('sess=null;mode="list";subject="歴史";sources=["hi00","hi33","hi34"];current="all";draw();1');await sleep(600);
+ await shot("h2.png");
+ ok("ふりがなが付く",(await ev('document.querySelectorAll("#list ruby").length'))>10,await ev('document.querySelectorAll("#list ruby").length')+"個");
+ console.log(out.join("\n"));if(errs.length)console.log("ERR:",errs.join("\n"));ws.close();ch.kill();
+})().catch(e=>{console.error(e);process.exit(1);});
