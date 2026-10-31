@@ -377,6 +377,8 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);color:v
 .cmap .symt{font-family:var(--ff-b)}
 .cmap .symw{fill:var(--paper)}
 .cmap .snum{fill:var(--red);font-size:16px;font-weight:700}
+.lvw{display:contents}
+.lvtag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--red);border:1px solid var(--red);border-radius:4px;padding:0 5px;margin-right:6px;line-height:1.6;vertical-align:2px}
 </style>
 <script>
 (function(){var t="light";try{t=localStorage.getItem("env-drill-theme")||"light";}catch(e){}
@@ -392,7 +394,7 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v40 ・ 10/31更新</span>
+      <span id="ver">v41 ・ 10/31更新</span>
     </div>
   </header>
 
@@ -443,6 +445,12 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
           <option value="ng">△ まだ だけ</option>
           <option value="ok">◯ できた だけ</option>
         </select></span>
+        <span class="lvw" id="lvWrap" hidden><span class="lab">レベル</span>
+        <span class="sel"><select id="level" aria-label="レベルを選ぶ">
+          <option value="all">基本＋発展</option>
+          <option value="k">基本だけ（80点ライン）</option>
+          <option value="h">発展だけ</option>
+        </select></span></span>
       </div>
       <div class="row2">
         <span class="lab">何問</span>
@@ -4126,6 +4134,9 @@ const DATA=[
 ]}
 ];
 DATA.forEach(s=>s.items.forEach((it,i)=>it.push(s.id+"-"+i)));
+const LEVEL={"mp1":"kkkkkkhhkkkkkkkk","mp2":"kkkkkkkkkkhhhkk","mp3":"kkkkkkkhkkhkkhhkkh","mp4":"kkkkkkkkhhhhh","mp5":"kkkkkkkkkkhhhhh","mp6":"kkkkkkkkkhhhhh","mp7":"kkkkkhhhh","mp8":"hhhhhhhkhhkkhkkhhhhhhhhkhhkhh","mp9":"kkkkhkkkkhkhkk","mp10":"hhhhhkkkk","mp11":"kkkkkkkkkkkkhhhhkkhh","mp12":"khhkkkkkkhkkkkh","mp13":"kkkkkkkkkkhkkhhhh","mp14":"kkkkkkkkkkkhkhhhhh","mp15":"kkhhhhhhh"};
+const LV={};DATA.forEach(s=>{const l=LEVEL[s.id];if(l)s.items.forEach((it,i)=>{LV[it[2]]=l[i];});});
+function hasLevel(){return sections().some(s=>LEVEL[s.id]&&(current==="all"||s.id===current));}
 
 /* ---------- ふりがな辞書（長い語を先に当てる） ---------- */
 const RUBY={
@@ -4190,11 +4201,11 @@ const save=()=>{
 
 /* ---------- 状態 ---------- */
 const COUNTS=[10,20,30,50,0];
-let subject="地理", sources=[], current="all", filter="all", count=20;
+let subject="地理", sources=[], current="all", filter="all", count=20, level="all";
 let mode="list", sess=null, fl=null, flTimer=null;
 const PKEY="env-drill-prefs", SKEY="env-drill-session";
 let flSpeed=1;
-function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify({subject:subject,sources:sources,current:current,filter:filter,count:count,flSpeed:flSpeed}));}catch(e){}}
+function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify({subject:subject,sources:sources,current:current,filter:filter,level:level,count:count,flSpeed:flSpeed}));}catch(e){}}
 function saveSess(){
   if(!sess)return;
   try{localStorage.setItem(SKEY,JSON.stringify({v:1,keys:sess.items.map(x=>x.key),i:sess.i,res:sess.res,range:sess.range||"",t:Date.now()}));}catch(e){}
@@ -4221,7 +4232,7 @@ const listEl=$("list"), playEl=$("play"), barEl=$("bar"), counts=$("counts"),
       srcBtn=$("srcBtn"), srcPop=$("srcPop"), srcLabel=$("srcLabel"), srcMenu=$("srcMenu");
 
 function sections(){return subSecs().filter(x=>!sources.length||sources.indexOf(x.from)>=0);}
-function keep(k){const m=marks[k];if(filter==="all")return true;if(filter==="none")return !m;return m===filter;}
+function keep(k){if(level!=="all"&&LV[k]&&LV[k]!==level)return false;const m=marks[k];if(filter==="all")return true;if(filter==="none")return !m;return m===filter;}
 function rows(s){return s.items.map(it=>({q:it[0],a:it[1],key:it[2],sec:s.title,short:(SRC[s.from]||{}).short||"",fig:s.figure}));}
 function pool(){let out=[];sections().filter(s=>current==="all"||s.id===current).forEach(s=>{out=out.concat(rows(s));});return out.filter(x=>keep(x.key));}
 function scopeItems(){let out=[];sections().filter(s=>current==="all"||s.id===current).forEach(s=>{out=out.concat(s.items);});return out;}
@@ -4321,6 +4332,7 @@ function drawCounts(){
 }
 unitSel.onchange=function(){current=unitSel.value;refresh();};
 filterSel.onchange=function(){filter=filterSel.value;refresh();};
+$("level").onchange=function(){level=$("level").value;refresh();};
 
 /* ---------- 一覧 ---------- */
 const MAP_SVG='<svg class="jpmap" viewBox="8 0 384 368" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="\u65e5\u672c\u306e\u7565\u5730\u56f3\u3068\u4e16\u754c\u81ea\u7136\u907a\u7523A\u301cF\u306e\u4f4d\u7f6e">'
@@ -4404,6 +4416,7 @@ function qNode(it,no){
   ok.onclick=function(){if(marks[it.key]==="ok")delete marks[it.key];else marks[it.key]="ok";save();sync();tally();};
   ng.onclick=function(){if(marks[it.key]==="ng")delete marks[it.key];else marks[it.key]="ng";save();sync();tally();};
   sync();mk.append(ok,ng);
+  if(LV[it.key]==="h"){const t=document.createElement("span");t.className="lvtag";t.textContent="発展";ask.prepend(t);}
   el.append(num,ask,box,mk);return el;
 }
 
@@ -4691,6 +4704,7 @@ function renderParent(){
 }
 
 function draw(){
+  $("lvWrap").hidden=!hasLevel();$("level").value=level;
   recount();drawSubjects();drawSources();drawUnits();drawCounts();
   const playing=(mode==="card"||mode==="flash");
   document.body.classList.toggle("playing",playing);
@@ -4882,7 +4896,7 @@ function renderPlay(){
   if(sess.i>=n){playEl.appendChild(resultNode());return;}
   const it=sess.items[sess.i];
   const card=document.createElement("section");card.className="card";
-  const tag=document.createElement("p");tag.className="tag";tag.textContent=(it.short?it.short+"　":"")+it.sec;
+  const tag=document.createElement("p");tag.className="tag";tag.textContent=(it.short?it.short+"　":"")+it.sec+(LV[it.key]==="h"?"　［発展］":LV[it.key]==="k"?"　［基本］":"");
   const q=document.createElement("p");q.className="card-q";q.appendChild(rubyFrag(it.q));
   card.append(tag,q);
   if(needFig(it)){card.classList.add("has-map");const mb=mapNode(it.fig);mb.classList.add("card-map");if(it.fig!=="map"){mb.onclick=function(){mb.classList.toggle("big");};const c=mb.querySelector(".mapcap");if(c)c.textContent="タップで拡大・"+(OVER[it.fig]&&OVER[it.fig].cap?"地図記号は形を簡単にして作図":"出典：地球地図日本（国土地理院）");}card.appendChild(mb);}
@@ -5110,11 +5124,12 @@ window.addEventListener("scroll",onScroll,{passive:true});onScroll();
       if(Array.isArray(p.sources))sources=p.sources.filter(id=>SRC[id]&&SRC[id].subject===subject);
       if(typeof p.current==="string")current=p.current;
       if(["all","none","ng","ok"].indexOf(p.filter)>=0)filter=p.filter;
+      if(["all","k","h"].indexOf(p.level)>=0)level=p.level;
       if(COUNTS.indexOf(p.count)>=0)count=p.count;
       if([0,1,2,3].indexOf(p.flSpeed)>=0)flSpeed=p.flSpeed;
     }
   }catch(e){}
-  filterSel.value=filter;
+  filterSel.value=filter;$("level").value=level;
   try{if(history.state&&history.state.v==="card")history.replaceState(null,"");}catch(e){}
 })();
 function packMarks(){return Object.keys(marks).filter(k=>marks[k]==="ok"||marks[k]==="ng").map(k=>k+(marks[k]==="ok"?"!":"_")).join(",");}
