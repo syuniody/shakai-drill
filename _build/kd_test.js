@@ -22,12 +22,12 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
  await ev('localStorage.clear();1');
  await ev('subject="地理";sources=["kd3","kd4"];current="all";filter="all";level="all";refresh();1');await sleep(400);
- ok("3・4 全部314",(await ev('pool().length'))===314,await ev('pool().length'));
+ ok("3・4 全部552",(await ev('pool().length'))===552,await ev('pool().length'));
  ok("レベル欄が出る",(await ev('$("lvWrap").hidden'))===false);
  await ev('$("level").value="k";$("level").onchange();1');await sleep(300);
- ok("基本186",(await ev('pool().length'))===186,await ev('pool().length'));
+ ok("基本326",(await ev('pool().length'))===326,await ev('pool().length'));
  await ev('$("level").value="h";$("level").onchange();1');await sleep(300);
- ok("発展128",(await ev('pool().length'))===128,await ev('pool().length'));
+ ok("発展226",(await ev('pool().length'))===226,await ev('pool().length'));
  await ev('$("level").value="all";$("level").onchange();1');await sleep(300);
  ok("第1章は231のまま",(await ev('(sources=["map1","map2"],refresh(),pool().length)'))===231);
  ok("プリセットに日本の国土",(await ev('JSON.stringify(PRESETS["地理"])')).includes("kd3"));
