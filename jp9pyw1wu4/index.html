@@ -394,7 +394,7 @@ document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})
       <span>全<span id="total">0</span>問</span>
       <span>出典 <span id="nsrc">0</span></span>
       <span>分野 <span id="nsec">0</span></span>
-      <span id="ver">v44 ・ 11/14更新</span>
+      <span id="ver">v45 ・ 11/14更新</span>
     </div>
   </header>
 
@@ -4736,7 +4736,7 @@ const DATA=[
 ]}
 ];
 DATA.forEach(s=>s.items.forEach((it,i)=>it.push(s.id+"-"+i)));
-const LEVEL={"kd17":"kkkkkkkkkkhhhhhhhhhhhhhhhhhhhhhhhh","kd18":"kkkkkkkkkkkkkhhhhhhhhhhhhhhhhhhhhh","kd19":"kkkkkkkkkhhhhhhhhhhhhhhhhhhhhhhhh","kd20":"kkkkkkkkhhhhhhhhhhhhhhhhhhhh","kd21":"kkkkkkkkhhhhhhhhhhhhhhhhhhhh","kd22":"kkkkkkkkkkhhhhhhhhhhhhhhhhhhhh","kd23":"kkkkkkkhhhhhhhhhhhhhh","kd24":"kkkkkkkkkhhhhhhhhhhhhhhhhhhhhh","kd1":"kkkkhhkkkkkhh","kd2":"kkkkkkkkhhhhhkkkkkkkhhhhhhhhhhhhhhhhhhhhhh","kd3":"kkhkkkkkkkkkkkkhhhh","kd4":"kkkkkkkkhh","kd5":"hhhhh","kd6":"kkkkkkkkhh","kd7":"kkkhkkkkkkkhhhkhhhhhhhhhhhhhh","kd8":"kkkkkkkkkkkhhhhhhhhhhhhhhhhhhhhhhhh","kd9":"kkkhhhkkkkhhhhhhh","kd10":"kkkkkkhh","kd11":"kkkkkkkkkkkkhh","kd12":"khhkkhhkhhhkkkkkhhhhhh","kd13":"kkkkkkkkkkkkkkhkkkkkkhhhhhhhhhhhh","kd14":"khkkkkkkkkkkkkkkkkkkkkkhh","kd15":"kkkkkhhhhhhhhhhhhhhhhhhh","kd16":"hhhhhhhh","mp1":"kkkkkkhhkkkkkkkk","mp2":"kkkkkkkkkkhhhkk","mp3":"kkkkkkkhkkhkkhhkkh","mp4":"kkkkkkkkhhhhh","mp5":"kkkkkkkkkkhhhhh","mp6":"kkkkkkkkkhhhhh","mp7":"kkkkkhhhh","mp8":"hhhhhhhkhhkkhkkhhhhhhhhkhhkhh","mp9":"kkkkhkkkkhkhkk","mp10":"hhhhhkkkk","mp11":"kkkkkkkkkkkkhhhhkkhh","mp12":"khhkkkkkkhkkkkh","mp13":"kkkkkkkkkkhkkhhhh","mp14":"kkkkkkkkkkkhkhhhhh","mp15":"kkhhhhhhh"};
+const LEVEL={"kd17":"kkkkkkkkkkhhhhhhhhhhhhhhhhhhhhhhhh","kd18":"kkkkkkkkkkkkkhhhhhhhhhhhhhhhhhhhhh","kd19":"hkkhkkkkhhhhhhhhhhhhhhhhhhhhhhhhh","kd20":"kkkkhhkkhhhhhhhhhhhhhhhhhhhh","kd21":"kkkkkhkkhhhhhhhhhhhhhhhhhhhh","kd22":"kkkkkkkkkkhhhhhhhhhhhhhhhhhhhh","kd23":"kkkkkkkhhhhhhhhhhhhhh","kd24":"kkkkkkkhkhhhhhhhhhhhhhhhhhhhhh","kd1":"kkkkhhkkkkhhh","kd2":"kkkkkkkkhhhhhkkkkkkkhhhhhhhhhhhhhhhhhhhhhh","kd3":"kkhkkkkkhkkkhkkhhhh","kd4":"hhhhhhhhhh","kd5":"hhhhh","kd6":"khkhkhkkhh","kd7":"hhkhhhhkkkkhhhkhhhhhhhhhhhhhh","kd8":"kkkkkkkhkkhhhhhhhhhhhhhhhhhhhhhhhhh","kd9":"hhhhhhkkkhhhhhhhh","kd10":"kkhkkhhh","kd11":"kkkkkkkkkkkkhh","kd12":"khhkkhhhhhhkkkkhhhhhhh","kd13":"kkkkkkkkkkkkhkhkkkkkhhhhhhhhhhhhh","kd14":"khkkkkkkkkkkhkkkkkkhhhhhh","kd15":"kkkkkhhhhhhhhhhhhhhhhhhh","kd16":"hhhhhhhh","mp1":"kkkkkkhhkkkkkkkk","mp2":"kkkkkkkkkkhhhkk","mp3":"kkkkkkkhkkhkkhhkkh","mp4":"kkkkkkkkhhhhh","mp5":"kkkkkkkkkkhhhhh","mp6":"kkkkkkkkkhhhhh","mp7":"kkkkkhhhh","mp8":"hhhhhhhkhhkkhkkhhhhhhhhkhhkhh","mp9":"kkkkhkkkkhkhkk","mp10":"hhhhhkkkk","mp11":"kkkkkkkkkkkkhhhhkkhh","mp12":"khhkkkkkkhkkkkh","mp13":"kkkkkkkkkkhkkhhhh","mp14":"kkkkkkkkkkkhkhhhhh","mp15":"kkhhhhhhh"};
 const LV={};DATA.forEach(s=>{const l=LEVEL[s.id];if(l)s.items.forEach((it,i)=>{LV[it[2]]=l[i];});});
 function hasLevel(){return sections().some(s=>LEVEL[s.id]&&(current==="all"||s.id===current));}
 
